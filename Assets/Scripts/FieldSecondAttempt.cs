@@ -7,8 +7,8 @@ public class FieldSecondAttempt : MonoBehaviour
     [SerializeField]
     public BoidController boidPrefab;
 
-    private float width = 17.75f;
-    private float height = 10;
+    private float width = 26.625f;
+    private float height = 16;
 
     public int spawnBoids = 100;
 
@@ -21,6 +21,8 @@ public class FieldSecondAttempt : MonoBehaviour
     private bool useAlignment = true;
     [SerializeField]
     private bool useSeparation = true;
+    [SerializeField]
+    private bool useWiggle = true;
 
     [SerializeField]
     [Header("Separation")]
@@ -53,6 +55,10 @@ public class FieldSecondAttempt : MonoBehaviour
     private float steeringSpeed = 1000f;
     [SerializeField]
     private float totalSpeedWeighting = 1f;
+    [SerializeField]
+    private float maxWiggle = 1f;
+    [SerializeField]
+    private int wiggleFrame = 10;
 
     private float sepX;
     private float sepY;
@@ -62,6 +68,10 @@ public class FieldSecondAttempt : MonoBehaviour
     private float flockY;
     private float bounceX;
     private float bounceY;
+    private float wiggleX;
+    private float wiggleY;
+
+    private int currentFrame;
 
     private void Start()
     {
@@ -113,10 +123,20 @@ public class FieldSecondAttempt : MonoBehaviour
                 flockY = 0;
             }
 
+            if(useWiggle)
+            {
+                (wiggleX, wiggleY) = Wiggle();
+            }
+            else
+            {
+                wiggleX = 0;
+                wiggleY = 0;
+            }
+
             (bounceX, bounceY) = BounceOffWalls(boid);
 
-            boid.SpeedX += (sepX + aliX + flockX + bounceX) / totalSpeedWeighting;
-            boid.SpeedY += (sepY + aliY + flockY + bounceY) / totalSpeedWeighting;
+            boid.SpeedX += (sepX + aliX + flockX + bounceX) / totalSpeedWeighting + wiggleX;
+            boid.SpeedY += (sepY + aliY + flockY + bounceY) / totalSpeedWeighting + wiggleY;
         }
     }
 
@@ -242,6 +262,22 @@ public class FieldSecondAttempt : MonoBehaviour
         bounceDirection = bounceDirection.normalized * bounceWeighting;
 
         return (bounceDirection.x, bounceDirection.y);
+    }
+
+    private (float wiggleX, float wiggleY) Wiggle()
+    {
+        wiggleX = 0;
+        wiggleY = 0;
+
+        if (currentFrame == wiggleFrame)
+        {
+            wiggleX = Random.Range(-maxWiggle, maxWiggle);
+            wiggleY = Random.Range(-maxWiggle, maxWiggle);
+            currentFrame = 0;
+        }
+
+        currentFrame++;
+        return (wiggleX, wiggleY);
     }
 
 }

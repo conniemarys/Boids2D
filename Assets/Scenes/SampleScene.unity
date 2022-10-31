@@ -176,7 +176,7 @@ Camera:
   far clip plane: 1000
   field of view: 60
   orthographic: 1
-  orthographic size: 10
+  orthographic size: 15
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
@@ -237,21 +237,24 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   boidPrefab: {fileID: -3064707007954770237, guid: 55e0e0765b7d9442f919911d50c125b6, type: 3}
-  spawnBoids: 60
+  spawnBoids: 100
   useFlock: 1
   useAlignment: 1
   useSeparation: 1
-  separationRadius: 6
+  useWiggle: 1
+  separationRadius: 1
   separationWeighting: 0.05
-  alignmentRadius: 10
+  alignmentRadius: 5
   alignmentWeighting: 0.08
-  flockRadius: 10
+  flockRadius: 5
   flockWeighting: 0.0003
   pad: 6
   turn: 0.5
   bounceWeighting: 0.2
   steeringSpeed: 100
   totalSpeedWeighting: 2
+  maxWiggle: 1
+  wiggleFrame: 10
 --- !u!4 &1532832489
 Transform:
   m_ObjectHideFlags: 0
@@ -260,7 +263,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1532832487}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 44.991146, y: 40.206303, z: -0.3005248}
+  m_LocalPosition: {x: 0, y: 0, z: -0.3005248}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -345,7 +348,7 @@ Transform:
   m_GameObject: {fileID: 1951720505}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 35.5, y: 20, z: 1}
+  m_LocalScale: {x: 53.25, y: 30, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
