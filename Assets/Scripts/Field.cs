@@ -15,21 +15,24 @@ public class Field : MonoBehaviour
     public GameObject boidPrefab;
     public readonly List<Boid> boids = new List<Boid>();
 
-    [Range(10, 60)]
+    [Range(0, 60)]
     public float flockDistance;
-    [Range(0.00001f, 0.05f)]
+    [Range(0, 2)]
     public float flockPower;
-    [Range(10, 60)]
+    [Range(0, 60)]
     public float alignDistance;
-    [Range(0.00001f, 0.05f)]
+    [Range(0, 5)]
     public float alignPower;
-    [Range(10, 60)]
+    [Range(0, 60)]
     public float avoidDistance;
-    [Range(0.00001f, 0.05f)]
+    [Range(0, 2)]
     public float avoidPower;
+    [Range(0.0001f, 400)]
+    public float speedModifier;
     public float pad;
     public float turn;
-    
+
+    public float maxSpeed;
 
     public void MakeField(int width = 400, int height = 400, int boidCount = 100)
     {
@@ -58,25 +61,26 @@ public class Field : MonoBehaviour
     public void Advance()
     {
         //Update void speed and direction based on rules
-     /*   foreach (var boid in boids)
-        {
-            (float bounceX, float bounceY) = BounceOffWalls(boid);
-
-            if (bounceX >= 0 || bounceY >= 0)
-            {
-                boid.Xvel += bounceX;
-                boid.Yvel += bounceY;
-                return;
-            }
-        }*/
 
         foreach (var boid in boids)
         {
-            (float flockXvel, float flockYvel) = Flock(boid, flockDistance, flockDistance);
+            (float flockXvel, float flockYvel) = Flock(boid, flockDistance, flockPower);
             (float alignXvel, float alignYvel) = Align(boid, alignDistance, alignPower);
             (float avoidXvel, float avoidYvel) = Avoid(boid, avoidDistance, avoidPower);
-            boid.Xvel += flockXvel + avoidXvel + alignXvel;
-            boid.Yvel += flockYvel + avoidYvel + alignYvel;
+            (float bounceX, float bounceY) = BounceOffWalls(boid);
+
+            List<float> values = new List<float>() { flockXvel, flockYvel, alignXvel, alignYvel, avoidXvel, avoidYvel, bounceX, bounceY };
+
+            for(int i = 0; i < values.Count; i++)
+            {
+                if(values[i] > maxSpeed)
+                {
+                    values[i] = maxSpeed;
+                }
+            }
+
+            boid.Xvel += (flockXvel + avoidXvel + alignXvel) / speedModifier + bounceX;
+            boid.Yvel += (flockYvel + avoidYvel + alignYvel) / speedModifier + bounceY;
         }
 
     }
@@ -99,8 +103,10 @@ public class Field : MonoBehaviour
         var neighbours = boids.Where(x => GetDistance(x, boid) < distance);
         float meanXvel = neighbours.Sum(x => x.Xvel) / neighbours.Count();
         float meanYvel = neighbours.Sum(x => x.Yvel) / neighbours.Count();
+
         float dXvel = meanXvel - boid.Xvel;
-        float dYvel = meanYvel = boid.Yvel;
+        float dYvel = meanYvel - boid.Yvel;
+
         return (dXvel * power, dYvel * power);
     }
 
@@ -126,6 +132,8 @@ public class Field : MonoBehaviour
 
     private (float xVel, float yVel) BounceOffWalls(Boid boid)
     {
+
+
         if (boid.transform.position.x < pad)
         {
             boid.Xvel += turn;
