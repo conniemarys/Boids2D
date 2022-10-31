@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class FieldSecondAttempt : MonoBehaviour
 {
@@ -73,6 +74,8 @@ public class FieldSecondAttempt : MonoBehaviour
 
     private int currentFrame;
 
+    private UIManager uIManager;
+
     private void Start()
     {
         boids = new List<BoidController>();
@@ -81,11 +84,48 @@ public class FieldSecondAttempt : MonoBehaviour
         {
             SpawnBoid(boidPrefab.gameObject);
         }
+
+        uIManager = GetComponent<UIManager>();
+
+       // uIManager.numBoidsSlider.onValueChanged.AddListener(numBoids);
+
+        uIManager.flockToggle.onValueChanged.AddListener(FlockToggle);
+        uIManager.alignToggle.onValueChanged.AddListener(AlignToggle);
+        uIManager.avoidToggle.onValueChanged.AddListener(AvoidToggle);
+
+        uIManager.flockRadiusSlider.onValueChanged.AddListener(FlockRadius);
+        uIManager.flockIntensitySlider.onValueChanged.AddListener(FlockIntensity);
+
+        uIManager.alignRadiusSlider.onValueChanged.AddListener(AlignRadius);
+        uIManager.alignIntensitySlider.onValueChanged.AddListener(AlignIntensity);
+
+        uIManager.avoidRadiusSlider.onValueChanged.AddListener(AvoidRadius);
+        uIManager.avoidIntensitySlider.onValueChanged.AddListener(AvoidIntensity);
+
+        uIManager.resetButton.onClick.AddListener(ResetButton);
     }
 
     private void FixedUpdate()
     {
-       Advance();
+        Advance();
+
+    }
+
+    private void ResetButton()
+    {
+        spawnBoids = 100;
+
+        useFlock = true;
+        useAlignment = true;
+        useSeparation = true;
+
+        separationRadius = 1;
+        separationWeighting = 0.1f;
+        alignmentRadius = 5;
+        alignmentWeighting = 0.08f;
+
+        flockRadius = 5;
+        flockWeighting = 0.0003f;
     }
 
     private void Advance()
@@ -278,6 +318,85 @@ public class FieldSecondAttempt : MonoBehaviour
 
         currentFrame++;
         return (wiggleX, wiggleY);
+    }
+
+    private void numBoids(float input)
+    {
+        int intInput = (int)input;
+
+        if (boids.Count == intInput)
+        {
+            return;
+        }
+        else if(boids.Count > intInput)
+        {
+            int count = boids.Count;
+
+            for (int i = count - 1; i > count - intInput; i--)
+            {
+                Destroy(boids[i].gameObject);
+                Destroy(boids[i]);
+                boids.Remove(boids[i]);
+            }
+   
+        }
+        else if(boids.Count < intInput)
+        {
+            for (int i = 0; i < intInput - boids.Count; i++)
+            {
+                SpawnBoid(boidPrefab.gameObject);
+            }
+        }
+    }
+
+    private void AvoidRadius(float input)
+    {
+        separationRadius = input;
+    }
+
+    private void AvoidIntensity(float input)
+    {
+        separationWeighting = IntensitySliders(input);
+    }
+
+    private void AlignRadius(float input)
+    {
+        alignmentRadius = input;
+    }
+
+    private void AlignIntensity(float input)
+    {
+        alignmentWeighting = IntensitySliders(input);
+    }
+
+    private void FlockRadius(float input)
+    {
+        flockRadius = input;
+    }
+
+    private void FlockIntensity(float input)
+    {
+        flockWeighting = IntensitySliders(input);
+    }
+
+    private void FlockToggle(bool input)
+    {
+        useFlock = input;
+    }
+
+    private void AvoidToggle(bool input)
+    {
+        useSeparation = input;
+    }
+
+    private void AlignToggle(bool input)
+    {
+        useAlignment = input;
+    }
+
+    private float IntensitySliders(float input)
+    {
+        return 0.0001f * Mathf.Pow(input, 2);
     }
 
 }
