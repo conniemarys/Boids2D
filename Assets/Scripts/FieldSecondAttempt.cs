@@ -60,6 +60,8 @@ public class FieldSecondAttempt : MonoBehaviour
     private float maxWiggle = 1f;
     [SerializeField]
     private int wiggleFrame = 10;
+    [SerializeField]
+    private float wiggleRadius = 10;
 
     private float sepX;
     private float sepY;
@@ -165,7 +167,7 @@ public class FieldSecondAttempt : MonoBehaviour
 
             if(useWiggle)
             {
-                (wiggleX, wiggleY) = Wiggle();
+                (wiggleX, wiggleY) = Wiggle(boid);
             }
             else
             {
@@ -304,16 +306,34 @@ public class FieldSecondAttempt : MonoBehaviour
         return (bounceDirection.x, bounceDirection.y);
     }
 
-    private (float wiggleX, float wiggleY) Wiggle()
+    private (float wiggleX, float wiggleY) Wiggle(BoidController boid)
     {
         wiggleX = 0;
         wiggleY = 0;
 
-        if (currentFrame == wiggleFrame)
+        int wiggleCount = 0;
+
+        foreach (BoidController otherBoid in boids)
         {
-            wiggleX = Random.Range(-maxWiggle, maxWiggle);
-            wiggleY = Random.Range(-maxWiggle, maxWiggle);
-            currentFrame = 0;
+            if (otherBoid == boid)
+                continue;
+
+            var distance = Vector3.Distance(boid.transform.position, otherBoid.transform.position);
+
+            if (distance < wiggleRadius)
+            {
+                wiggleCount++;
+            }
+        }
+
+        if(wiggleCount > 3)
+        {
+            if (currentFrame == wiggleFrame)
+            {
+                wiggleX = Random.Range(-maxWiggle, maxWiggle);
+                wiggleY = Random.Range(-maxWiggle, maxWiggle);
+                currentFrame = 0;
+            }
         }
 
         currentFrame++;
