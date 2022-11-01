@@ -6,14 +6,18 @@ using UnityEngine.UI;
 public class FieldSecondAttempt : MonoBehaviour
 {
     [SerializeField]
-    public BoidController boidPrefab;
+    public GameObject greenPrefab;
+    public GameObject orangePrefab;
 
     private float width = 26.625f;
     private float height = 16;
 
     public int spawnBoids = 100;
 
-    private List<BoidController> boids;
+    public static List<BoidController> boids;
+
+    [SerializeField]
+    public int numTeams;
 
     [SerializeField]
     [Header("Options")]
@@ -78,57 +82,48 @@ public class FieldSecondAttempt : MonoBehaviour
 
     private UIManager uIManager;
 
+
+
     private void Start()
     {
         boids = new List<BoidController>();
 
-        for (int i = 0; i < spawnBoids; i++)
+        switch(numTeams)
         {
-            SpawnBoid(boidPrefab.gameObject);
+            case 1:
+                for (int i = 0; i < spawnBoids; i++)
+                {
+                    SpawnGreenBoid(greenPrefab.gameObject);
+                }
+                break;
+            case 2:
+                for (int i = 0; i < spawnBoids / 2; i++)
+                {
+                    SpawnGreenBoid(greenPrefab.gameObject);
+                    SpawnOrangeBoid(orangePrefab.gameObject);
+                }
+                break;
+            default:
+                for (int i = 0; i < spawnBoids; i++)
+                {
+                    SpawnGreenBoid(greenPrefab.gameObject);
+                }
+                break;
         }
+
 
         uIManager = GetComponent<UIManager>();
 
-       // uIManager.numBoidsSlider.onValueChanged.AddListener(numBoids);
+        AddListeners();
 
-        uIManager.flockToggle.onValueChanged.AddListener(FlockToggle);
-        uIManager.alignToggle.onValueChanged.AddListener(AlignToggle);
-        uIManager.avoidToggle.onValueChanged.AddListener(AvoidToggle);
-
-        uIManager.flockRadiusSlider.onValueChanged.AddListener(FlockRadius);
-        uIManager.flockIntensitySlider.onValueChanged.AddListener(FlockIntensity);
-
-        uIManager.alignRadiusSlider.onValueChanged.AddListener(AlignRadius);
-        uIManager.alignIntensitySlider.onValueChanged.AddListener(AlignIntensity);
-
-        uIManager.avoidRadiusSlider.onValueChanged.AddListener(AvoidRadius);
-        uIManager.avoidIntensitySlider.onValueChanged.AddListener(AvoidIntensity);
-
-        uIManager.resetButton.onClick.AddListener(ResetButton);
     }
+
 
     private void FixedUpdate()
     {
         Advance();
-
     }
 
-    private void ResetButton()
-    {
-        spawnBoids = 100;
-
-        useFlock = true;
-        useAlignment = true;
-        useSeparation = true;
-
-        separationRadius = 1;
-        separationWeighting = 0.1f;
-        alignmentRadius = 5;
-        alignmentWeighting = 0.08f;
-
-        flockRadius = 5;
-        flockWeighting = 0.0003f;
-    }
 
     private void Advance()
     {
@@ -137,7 +132,7 @@ public class FieldSecondAttempt : MonoBehaviour
         {
             if (useSeparation)
             {
-                (sepX, sepY) = Separation(boid);
+                (sepX, sepY) = BoidRules.Separation(boid, separationRadius, separationWeighting);
             }
             else
             {
@@ -147,7 +142,7 @@ public class FieldSecondAttempt : MonoBehaviour
 
             if(useAlignment)
             {
-                (aliX, aliY) = Alignment(boid);
+                (aliX, aliY) = BoidRules.Alignment(boid, alignmentRadius, alignmentWeighting);
             }
             else
             {
@@ -157,7 +152,7 @@ public class FieldSecondAttempt : MonoBehaviour
 
             if(useFlock)
             {
-                (flockX, flockY) = Flock(boid);
+                (flockX, flockY) = BoidRules.Flock(boid, flockRadius, flockWeighting);
             }
             else
             {
@@ -182,7 +177,21 @@ public class FieldSecondAttempt : MonoBehaviour
         }
     }
 
-    private void SpawnBoid(GameObject prefab)
+
+
+    private void SpawnGreenBoid(GameObject prefab)
+    {
+        var boidInstance = Instantiate(prefab, transform);
+        boidInstance.transform.localPosition += new Vector3(Random.Range(-width, width), Random.Range(-height, height), 0);
+        BoidController boidController = boidInstance.GetComponent<BoidController>();
+        boidController.SpeedX = Random.Range(-2, 2);
+        boidController.SpeedY = Random.Range(-2, 2);
+        boidController.SteeringSpeed = steeringSpeed;
+        boidController.team = BoidController.Team.green;
+        boids.Add(boidController);
+    }
+
+    private void SpawnOrangeBoid(GameObject prefab)
     {
         var boidInstance = Instantiate(prefab);
         boidInstance.transform.localPosition += new Vector3(Random.Range(-width, width), Random.Range(-height, height), 0);
@@ -190,94 +199,8 @@ public class FieldSecondAttempt : MonoBehaviour
         boidController.SpeedX = Random.Range(-2, 2);
         boidController.SpeedY = Random.Range(-2, 2);
         boidController.SteeringSpeed = steeringSpeed;
+        boidController.team = BoidController.Team.orange;
         boids.Add(boidController);
-    }
-
-    private (float sepX, float sepY) Separation(BoidController boid)
-    {
-        //separation vars
-        Vector3 separationDirection = Vector3.zero;
-        int separationCount = 0;
-
-        foreach (BoidController otherBoid in boids)
-        {
-            //skip self
-            if (otherBoid == boid)
-                continue;
-
-            var distance = Vector3.Distance(boid.transform.position, otherBoid.transform.position);
-
-            //identify local neighbour
-            if (distance < separationRadius)
-            {
-                separationDirection += otherBoid.transform.position - boid.transform.position;
-                separationCount++;
-            }
-        }
-
-        //calculate average
-        if (separationCount > 0)
-            separationDirection /= separationCount;
-
-        //flip and normalize
-        separationDirection = -separationDirection.normalized * separationWeighting;
-
-        //apply to steering
-        return (separationDirection.x, separationDirection.y);
-    }
-
-    private (float aliX, float aliY) Alignment(BoidController boid)
-    {
-        Vector3 alignmentDirection = Vector3.zero;
-        int alignmentCount = 0;
-
-        foreach (BoidController otherBoid in boids)
-        {
-            if (otherBoid == boid)
-                continue;
-
-            var distance = Vector3.Distance(boid.transform.position, otherBoid.transform.position);
-
-            if (distance < alignmentRadius)
-            {
-                alignmentDirection += new Vector3(otherBoid.SpeedX, otherBoid.SpeedY, 0);
-                alignmentCount++;
-            }
-        }
-
-        if (alignmentCount > 0)
-            alignmentDirection /= alignmentCount;
-
-        alignmentDirection = alignmentDirection.normalized * alignmentWeighting;
-
-        return (alignmentDirection.x, alignmentDirection.y);
-    }
-
-    private (float flockX, float flockY) Flock(BoidController boid)
-    {
-        Vector3 flockDirection = Vector3.zero;
-        int flockCount = 0;
-        foreach (BoidController otherBoid in boids)
-        {
-            if (otherBoid == boid)
-                continue;
-
-            var distance = Vector3.Distance(boid.transform.position, otherBoid.transform.position);
-
-            if (distance < flockRadius)
-            {
-                flockDirection += otherBoid.transform.position - boid.transform.position;
-                flockCount++;
-
-            }
-        }
-
-        if (flockCount > 0)
-            flockDirection /= flockCount;
-
-        flockDirection = flockDirection.normalized * flockWeighting;
-
-        return (flockDirection.x, flockDirection.y);
     }
 
     private (float bounceX, float bounceY) BounceOffWalls(BoidController boid)
@@ -306,6 +229,7 @@ public class FieldSecondAttempt : MonoBehaviour
         return (bounceDirection.x, bounceDirection.y);
     }
 
+
     private (float wiggleX, float wiggleY) Wiggle(BoidController boid)
     {
         wiggleX = 0;
@@ -316,6 +240,8 @@ public class FieldSecondAttempt : MonoBehaviour
         foreach (BoidController otherBoid in boids)
         {
             if (otherBoid == boid)
+                continue;
+            else if (otherBoid.team != boid.team)
                 continue;
 
             var distance = Vector3.Distance(boid.transform.position, otherBoid.transform.position);
@@ -340,33 +266,22 @@ public class FieldSecondAttempt : MonoBehaviour
         return (wiggleX, wiggleY);
     }
 
-    private void numBoids(float input)
+
+    private void ResetButton()
     {
-        int intInput = (int)input;
+        spawnBoids = 100;
 
-        if (boids.Count == intInput)
-        {
-            return;
-        }
-        else if(boids.Count > intInput)
-        {
-            int count = boids.Count;
+        useFlock = true;
+        useAlignment = true;
+        useSeparation = true;
 
-            for (int i = count - 1; i > count - intInput; i--)
-            {
-                Destroy(boids[i].gameObject);
-                Destroy(boids[i]);
-                boids.Remove(boids[i]);
-            }
-   
-        }
-        else if(boids.Count < intInput)
-        {
-            for (int i = 0; i < intInput - boids.Count; i++)
-            {
-                SpawnBoid(boidPrefab.gameObject);
-            }
-        }
+        separationRadius = 1;
+        separationWeighting = 0.1f;
+        alignmentRadius = 5;
+        alignmentWeighting = 0.08f;
+
+        flockRadius = 5;
+        flockWeighting = 0.0003f;
     }
 
     private void AvoidRadius(float input)
@@ -417,6 +332,24 @@ public class FieldSecondAttempt : MonoBehaviour
     private float IntensitySliders(float input)
     {
         return 0.0001f * Mathf.Pow(input, 2);
+    }
+
+    private void AddListeners()
+    {
+        uIManager.flockToggle.onValueChanged.AddListener(FlockToggle);
+        uIManager.alignToggle.onValueChanged.AddListener(AlignToggle);
+        uIManager.avoidToggle.onValueChanged.AddListener(AvoidToggle);
+
+        uIManager.flockRadiusSlider.onValueChanged.AddListener(FlockRadius);
+        uIManager.flockIntensitySlider.onValueChanged.AddListener(FlockIntensity);
+
+        uIManager.alignRadiusSlider.onValueChanged.AddListener(AlignRadius);
+        uIManager.alignIntensitySlider.onValueChanged.AddListener(AlignIntensity);
+
+        uIManager.avoidRadiusSlider.onValueChanged.AddListener(AvoidRadius);
+        uIManager.avoidIntensitySlider.onValueChanged.AddListener(AvoidIntensity);
+
+        uIManager.resetButton.onClick.AddListener(ResetButton);
     }
 
 }

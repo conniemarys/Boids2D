@@ -11,6 +11,14 @@ public class BoidController : MonoBehaviour
     private float minSpeed = 1;
     private float maxSpeed = 4;
 
+    public enum Team
+    {
+        green,
+        orange,
+    }
+
+    public Team team;
+
     public void FixedUpdate()
     {
         (SpeedX, SpeedY) = MinMax(SpeedX, SpeedY);
