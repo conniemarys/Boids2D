@@ -9,11 +9,12 @@ public class FieldSecondAttempt : MonoBehaviour
     public GameObject greenPrefab;
     public GameObject orangePrefab;
     public GameObject purplePrefab;
+    public GameObject menuBackground;
 
     private float width = 26.625f;
     private float height = 16;
 
-    public int spawnBoids = 100;
+    public int spawnBoids;
 
     public static List<BoidController> boids;
 
@@ -49,6 +50,12 @@ public class FieldSecondAttempt : MonoBehaviour
     private float flockWeighting;
 
     [SerializeField]
+    [Header("Avoiding other Teams")]
+    private float avoidTeamRadius;
+    [SerializeField]
+    private float avoidTeamWeighting;
+
+    [SerializeField]
     [Header("Bouncing")]
     private float pad;
     [SerializeField]
@@ -74,6 +81,8 @@ public class FieldSecondAttempt : MonoBehaviour
     private float aliY;
     private float flockX;
     private float flockY;
+    private float avoidTeamX;
+    private float avoidTeamY;
     private float bounceX;
     private float bounceY;
     private float wiggleX;
@@ -89,34 +98,34 @@ public class FieldSecondAttempt : MonoBehaviour
     {
         boids = new List<BoidController>();
 
-        SpawnTeams(numTeams);
-
         uIManager = GetComponent<UIManager>();
 
-        AddListeners();
+        MenuBoids();
 
+        AddListeners();
+        
     }
 
-    private void SpawnTeams(int numTeams)
+
+    private void SpawnTeams(int numTeams, int numBoids)
     {
         switch (numTeams)
         {
             case 1:
-                for (int i = 0; i < spawnBoids; i++)
+                for (int i = 0; i < numBoids; i++)
                 {
                     SpawnBoid(greenPrefab, BoidController.Team.green);
-                    SpawnBoid(orangePrefab, BoidController.Team.orange);
                 }
                 break;
             case 2:
-                for (int i = 0; i < spawnBoids / numTeams; i++)
+                for (int i = 0; i < numBoids / numTeams; i++)
                 {
                     SpawnBoid(greenPrefab, BoidController.Team.green);
                     SpawnBoid(orangePrefab, BoidController.Team.orange);
                 }
                 break;
             case 3:
-                for (int i = 0; i < spawnBoids / numTeams; i++)
+                for (int i = 0; i < numBoids / numTeams; i++)
                 {
                     SpawnBoid(greenPrefab, BoidController.Team.green);
                     SpawnBoid(orangePrefab, BoidController.Team.orange);
@@ -124,7 +133,7 @@ public class FieldSecondAttempt : MonoBehaviour
                 }
                 break;
             default:
-                for (int i = 0; i < spawnBoids; i++)
+                for (int i = 0; i < numBoids; i++)
                 {
                     SpawnBoid(greenPrefab.gameObject, BoidController.Team.green);
                 }
@@ -183,10 +192,20 @@ public class FieldSecondAttempt : MonoBehaviour
                 wiggleY = 0;
             }
 
+            if(numTeams > 1)
+            {
+                (avoidTeamX, avoidTeamY) = BoidRules.AvoidTeams(boid, avoidTeamRadius, avoidTeamWeighting);
+            }
+            else
+            {
+                avoidTeamX = 0;
+                avoidTeamY = 0;
+            }
+
             (bounceX, bounceY) = BounceOffWalls(boid);
 
-            boid.SpeedX += (sepX + aliX + flockX + bounceX) / totalSpeedWeighting + wiggleX;
-            boid.SpeedY += (sepY + aliY + flockY + bounceY) / totalSpeedWeighting + wiggleY;
+            boid.SpeedX += (sepX + aliX + flockX + bounceX + avoidTeamX) / totalSpeedWeighting + wiggleX;
+            boid.SpeedY += (sepY + aliY + flockY + bounceY + avoidTeamY) / totalSpeedWeighting + wiggleY;
         }
     }
 
@@ -204,6 +223,40 @@ public class FieldSecondAttempt : MonoBehaviour
         boids.Add(boidController);
     }
 
+    private void MenuBoids()
+    {
+        if (boids.Count > 0)
+        {
+            for (int i = boids.Count - 1; i >= 0; i--)
+            {
+                Destroy(boids[i].gameObject);
+            }
+
+            boids.Clear();
+        }
+
+        menuBackground.SetActive(true);
+        SpawnTeams(2, 20);
+    }
+
+
+    private void NewGame()
+    {
+        if (boids.Count > 0)
+        {
+            for (int i = boids.Count - 1; i >= 0; i--)
+            {
+                Destroy(boids[i].gameObject);
+            }
+
+            boids.Clear();
+        }
+
+        SpawnTeams(numTeams, (int)uIManager.numberofBoidsSlider.value);
+
+        menuBackground.SetActive(false);
+
+    }
 
     private (float bounceX, float bounceY) BounceOffWalls(BoidController boid)
     {
@@ -279,11 +332,15 @@ public class FieldSecondAttempt : MonoBehaviour
 
         separationRadius = 1;
         separationWeighting = 0.1f;
+
         alignmentRadius = 5;
         alignmentWeighting = 0.08f;
 
         flockRadius = 5;
         flockWeighting = 0.0003f;
+
+        avoidTeamRadius = 5;
+        avoidTeamWeighting = 0.0003f;
     }
 
     private void AvoidRadius(float input)
@@ -316,6 +373,16 @@ public class FieldSecondAttempt : MonoBehaviour
         flockWeighting = IntensitySliders(input);
     }
 
+    private void AvoidTeamsRadius(float input)
+    {
+        avoidTeamRadius = input;
+    }
+
+    private void AvoidTeamsIntensity(float input)
+    {
+        avoidTeamWeighting = IntensitySliders(input);
+    }
+
     private void FlockToggle(bool input)
     {
         useFlock = input;
@@ -336,6 +403,65 @@ public class FieldSecondAttempt : MonoBehaviour
         return 0.0001f * Mathf.Pow(input, 2);
     }
 
+    private void OneToggle(bool input)
+    {
+        if(input)
+        {
+            numTeams = 1;
+            uIManager.twoToggle.isOn =false;
+            uIManager.threeToggle.isOn = false;
+        }
+        else
+        {
+            numTeams = 0;
+        }
+    }
+
+    private void TwoToggle(bool input)
+    {
+        if (input)
+        {
+            numTeams = 2;
+            uIManager.oneToggle.isOn = false;
+            uIManager.threeToggle.isOn = false;
+        }
+        else
+        {
+            numTeams = 0;
+        }
+    }
+
+    private void ThreeToggle(bool input)
+    {
+        if (input)
+        {
+            numTeams = 3;
+            uIManager.oneToggle.isOn = false;
+            uIManager.twoToggle.isOn = false;
+        }
+        else
+        {
+            numTeams = 0;
+        }
+    }
+
+    private void NumBoids(float input)
+    {
+        spawnBoids = (int)input;
+    }
+
+    private void StartButton()
+    {
+        if (!uIManager.oneToggle.isOn && !uIManager.twoToggle.isOn && !uIManager.threeToggle.isOn)
+        {
+            return;
+        }
+        else
+        {
+            NewGame();
+        }
+    }
+
     private void AddListeners()
     {
         uIManager.flockToggle.onValueChanged.AddListener(FlockToggle);
@@ -351,7 +477,19 @@ public class FieldSecondAttempt : MonoBehaviour
         uIManager.avoidRadiusSlider.onValueChanged.AddListener(AvoidRadius);
         uIManager.avoidIntensitySlider.onValueChanged.AddListener(AvoidIntensity);
 
+        uIManager.avoidTeamsRadiusSlider.onValueChanged.AddListener(AvoidTeamsRadius);
+        uIManager.avoidTeamsIntensitySlider.onValueChanged.AddListener(AvoidTeamsIntensity);
+
         uIManager.resetButton.onClick.AddListener(ResetButton);
+
+        uIManager.oneToggle.onValueChanged.AddListener(OneToggle);
+        uIManager.twoToggle.onValueChanged.AddListener(TwoToggle);
+        uIManager.threeToggle.onValueChanged.AddListener(ThreeToggle);
+
+        uIManager.numBoidsSlider.onValueChanged.AddListener(NumBoids);
+
+        uIManager.startButton.onClick.AddListener(StartButton);
+        uIManager.ingameQuitButton.onClick.AddListener(MenuBoids);
     }
 
 }

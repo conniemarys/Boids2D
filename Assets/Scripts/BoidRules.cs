@@ -105,4 +105,38 @@ public class BoidRules
         return (flockDirection.x, flockDirection.y);
     }
 
+    public static (float avoidTeamX, float avoidTeamY) AvoidTeams(BoidController boid, float avoidTeamRadius, float avoidTeamWeighting)
+    {
+        Vector3 avoidTeamDirection = Vector3.zero;
+        int otherTeamCount = 0;
+
+        foreach (BoidController otherBoid in FieldSecondAttempt.boids)
+        {
+            if (otherBoid == boid)
+                continue;
+            if (otherBoid.team == boid.team)
+                continue;
+
+            var distance = Vector3.Distance(boid.transform.position, otherBoid.transform.position);
+
+            //identify local neighbour
+            if (distance < avoidTeamRadius)
+            {
+                avoidTeamDirection += otherBoid.transform.position - boid.transform.position;
+                otherTeamCount++;
+            }
+        }
+
+        //calculate average
+        if (otherTeamCount > 0)
+            avoidTeamDirection /= otherTeamCount;
+
+        //flip and normalize
+        avoidTeamDirection = -avoidTeamDirection.normalized * avoidTeamWeighting;
+
+        //apply to steering
+        return (avoidTeamDirection.x, avoidTeamDirection.y);
+    
+    }
+
 }

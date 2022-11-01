@@ -26,9 +26,9 @@ public class BoidController : MonoBehaviour
 
         Vector3 movementDirection = new Vector3(SpeedX, SpeedY, 0);
 
-        transform.position += movementDirection * Time.deltaTime;
+        transform.position = transform.position + movementDirection * Time.deltaTime;
 
-        if(movementDirection != Vector3.zero)
+        if (movementDirection != Vector3.zero)
         {
 
             float angle = Mathf.Atan2(movementDirection.y, movementDirection.x) * Mathf.Rad2Deg;
@@ -40,6 +40,11 @@ public class BoidController : MonoBehaviour
 
     private (float newSpeedX, float newSpeedY) MinMax(float speedX, float speedY)
     {
+        if (SpeedX == 0 && SpeedY == 0)
+        {
+            return (minSpeed, minSpeed);
+        }
+
         float speed = GetSpeed(speedX, speedY);
 
         if (speed > maxSpeed)
