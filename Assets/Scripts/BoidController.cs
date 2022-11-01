@@ -15,6 +15,7 @@ public class BoidController : MonoBehaviour
     {
         green,
         orange,
+        purple,
     }
 
     public Team team;

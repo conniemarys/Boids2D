@@ -8,6 +8,7 @@ public class FieldSecondAttempt : MonoBehaviour
     [SerializeField]
     public GameObject greenPrefab;
     public GameObject orangePrefab;
+    public GameObject purplePrefab;
 
     private float width = 26.625f;
     private float height = 16;
@@ -88,29 +89,7 @@ public class FieldSecondAttempt : MonoBehaviour
     {
         boids = new List<BoidController>();
 
-        switch(numTeams)
-        {
-            case 1:
-                for (int i = 0; i < spawnBoids; i++)
-                {
-                    SpawnGreenBoid(greenPrefab.gameObject);
-                }
-                break;
-            case 2:
-                for (int i = 0; i < spawnBoids / 2; i++)
-                {
-                    SpawnGreenBoid(greenPrefab.gameObject);
-                    SpawnOrangeBoid(orangePrefab.gameObject);
-                }
-                break;
-            default:
-                for (int i = 0; i < spawnBoids; i++)
-                {
-                    SpawnGreenBoid(greenPrefab.gameObject);
-                }
-                break;
-        }
-
+        SpawnTeams(numTeams);
 
         uIManager = GetComponent<UIManager>();
 
@@ -118,6 +97,40 @@ public class FieldSecondAttempt : MonoBehaviour
 
     }
 
+    private void SpawnTeams(int numTeams)
+    {
+        switch (numTeams)
+        {
+            case 1:
+                for (int i = 0; i < spawnBoids; i++)
+                {
+                    SpawnBoid(greenPrefab, BoidController.Team.green);
+                    SpawnBoid(orangePrefab, BoidController.Team.orange);
+                }
+                break;
+            case 2:
+                for (int i = 0; i < spawnBoids / numTeams; i++)
+                {
+                    SpawnBoid(greenPrefab, BoidController.Team.green);
+                    SpawnBoid(orangePrefab, BoidController.Team.orange);
+                }
+                break;
+            case 3:
+                for (int i = 0; i < spawnBoids / numTeams; i++)
+                {
+                    SpawnBoid(greenPrefab, BoidController.Team.green);
+                    SpawnBoid(orangePrefab, BoidController.Team.orange);
+                    SpawnBoid(purplePrefab, BoidController.Team.purple);
+                }
+                break;
+            default:
+                for (int i = 0; i < spawnBoids; i++)
+                {
+                    SpawnBoid(greenPrefab.gameObject, BoidController.Team.green);
+                }
+                break;
+        }
+    }
 
     private void FixedUpdate()
     {
@@ -179,7 +192,7 @@ public class FieldSecondAttempt : MonoBehaviour
 
 
 
-    private void SpawnGreenBoid(GameObject prefab)
+    private void SpawnBoid(GameObject prefab, BoidController.Team team)
     {
         var boidInstance = Instantiate(prefab, transform);
         boidInstance.transform.localPosition += new Vector3(Random.Range(-width, width), Random.Range(-height, height), 0);
@@ -187,21 +200,10 @@ public class FieldSecondAttempt : MonoBehaviour
         boidController.SpeedX = Random.Range(-2, 2);
         boidController.SpeedY = Random.Range(-2, 2);
         boidController.SteeringSpeed = steeringSpeed;
-        boidController.team = BoidController.Team.green;
+        boidController.team = team;
         boids.Add(boidController);
     }
 
-    private void SpawnOrangeBoid(GameObject prefab)
-    {
-        var boidInstance = Instantiate(prefab);
-        boidInstance.transform.localPosition += new Vector3(Random.Range(-width, width), Random.Range(-height, height), 0);
-        BoidController boidController = boidInstance.GetComponent<BoidController>();
-        boidController.SpeedX = Random.Range(-2, 2);
-        boidController.SpeedY = Random.Range(-2, 2);
-        boidController.SteeringSpeed = steeringSpeed;
-        boidController.team = BoidController.Team.orange;
-        boids.Add(boidController);
-    }
 
     private (float bounceX, float bounceY) BounceOffWalls(BoidController boid)
     {
