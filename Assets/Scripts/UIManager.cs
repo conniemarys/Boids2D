@@ -5,115 +5,119 @@ using UnityEngine.UI;
 
 public class UIManager : MonoBehaviour
 {
-    public GameObject optionsMenu;
-    public GameObject flockSettings;
-    public GameObject avoidSettings;
-    public GameObject alignSettings;
+    public GameObject OptionsMenu;
+    public GameObject FlockSettings;
+    public GameObject AvoidSettings;
+    public GameObject AlignSettings;
 
-    public bool menuScreenBool;
+    public bool MenuScreenBool;
 
     [Header ("InGame UI")]
     [SerializeField]
-    public Slider numBoidsSlider;
+    public Slider NumBoidsSlider;
 
     [SerializeField]
-    public Toggle flockToggle;
+    public Toggle FlockToggle;
     [SerializeField]
-    public Toggle avoidToggle;
+    public Toggle AvoidToggle;
     [SerializeField]
-    public Toggle alignToggle;
+    public Toggle AlignToggle;
 
     [SerializeField]
-    public Slider flockRadiusSlider;
+    public Slider FlockRadiusSlider;
     [SerializeField]
-    public Slider flockIntensitySlider;
+    public Slider FlockIntensitySlider;
 
     [SerializeField]
-    public Slider avoidRadiusSlider;
+    public Slider AvoidRadiusSlider;
     [SerializeField]
-    public Slider avoidIntensitySlider;
+    public Slider AvoidIntensitySlider;
 
     [SerializeField]
-    public Slider alignRadiusSlider;
+    public Slider AlignRadiusSlider;
     [SerializeField]
-    public Slider alignIntensitySlider;
+    public Slider AlignIntensitySlider;
 
     [SerializeField]
-    public Slider avoidTeamsRadiusSlider;
+    public Slider AvoidTeamsRadiusSlider;
     [SerializeField]
-    public Slider avoidTeamsIntensitySlider;
+    public Slider AvoidTeamsIntensitySlider;
 
     [SerializeField]
-    public Button resetButton;
+    public Slider AvoidObstaclesIntensitySlider;
+
     [SerializeField]
-    public Button ingameQuitButton;
+    public Button ResetButton;
+    [SerializeField]
+    public Button IngameQuitButton;
 
-    public GameObject tabToggle;
+    public GameObject TabToggle;
 
-    private bool optionsMenuToggle = true;
+    private bool OptionsMenuToggle = true;
 
     [Header("Menu UI")]
     [SerializeField]
-    public GameObject menuScreen;
+    public GameObject MenuScreen;
 
-    public Toggle oneToggle;
-    public Toggle twoToggle;
-    public Toggle threeToggle;
+    public Toggle OneToggle;
+    public Toggle TwoToggle;
+    public Toggle ThreeToggle;
 
-    public Slider numberofBoidsSlider;
-    public GameObject numberofBoidsText;
-    public GameObject invalidText;
+    public Slider NumberofBoidsSlider;
+    public GameObject NumberofBoidsText;
+    public GameObject InvalidText;
 
-    public Button startButton;
-    public Button menuQuitButton;
+    public Button StartButton;
+    public Button MenuQuitButton;
 
     private void Start()
     {
         Reset();
 
-        menuScreenBool = true;
-        menuScreen.SetActive(true);
-        optionsMenu.SetActive(false);
-        tabToggle.SetActive(false);
+        MenuScreenBool = true;
+        MenuScreen.SetActive(true);
+        OptionsMenu.SetActive(false);
+        TabToggle.SetActive(false);
 
-        resetButton.onClick.AddListener(Reset);
-        menuQuitButton.onClick.AddListener(QuitButton);
-        ingameQuitButton.onClick.AddListener(InGameQuitButton);
+        ResetButton.onClick.AddListener(Reset);
+        MenuQuitButton.onClick.AddListener(QuitButton);
+        IngameQuitButton.onClick.AddListener(InGameQuitButton);
 
-        numberofBoidsSlider.onValueChanged.AddListener(ChangeText);
+        NumberofBoidsSlider.onValueChanged.AddListener(ChangeText);
 
-        startButton.onClick.AddListener(StartButton);
+        StartButton.onClick.AddListener(OnStartButton);
 
     }
 
-    private void StartButton()
+    private void OnStartButton()
     {
-        if(!oneToggle.isOn && !twoToggle.isOn && !threeToggle.isOn)
+        if(!OneToggle.isOn && !TwoToggle.isOn && !ThreeToggle.isOn)
         {
-            invalidText.SetActive(true);
+            InvalidText.SetActive(true);
         }
 
         else
         {
-            menuScreen.SetActive(false);
-            menuScreenBool = false;
-            tabToggle.SetActive(true);
+            InvalidText.SetActive(false);
+            MenuScreen.SetActive(false);
+            MenuScreenBool = false;
+            TabToggle.SetActive(true);
         }
     }
 
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Tab) && !menuScreenBool)
+        if (Input.GetKeyDown(KeyCode.Tab) && !MenuScreenBool)
         {
-            if(optionsMenuToggle)
+            if(OptionsMenuToggle)
             {
-                optionsMenu.SetActive(false);
-                optionsMenuToggle = false;
+                OptionsMenu.SetActive(false);
+                OptionsMenuToggle = false;
             }
-            else if(!optionsMenuToggle)
+            else if(!OptionsMenuToggle)
             {
-                optionsMenu.SetActive(true);
-                optionsMenuToggle = true;
+                OptionsMenu.SetActive(true);
+                OptionsMenuToggle = true;
             }
         }
 
@@ -121,7 +125,7 @@ public class UIManager : MonoBehaviour
 
     private void ChangeText(float input)
     {
-        numberofBoidsText.GetComponent<Text>().text = input.ToString();
+        NumberofBoidsText.GetComponent<Text>().text = input.ToString();
 
     }
 
@@ -132,36 +136,38 @@ public class UIManager : MonoBehaviour
 
     private void InGameQuitButton()
     {
-        menuScreenBool = true;
-        menuScreen.SetActive(true);
-        optionsMenu.SetActive(false);
-        tabToggle.SetActive(false);
+        MenuScreenBool = true;
+        MenuScreen.SetActive(true);
+        OptionsMenu.SetActive(false);
+        TabToggle.SetActive(false);
 
-        oneToggle.isOn = false;
-        twoToggle.isOn = false;
-        threeToggle.isOn = false;
+        OneToggle.isOn = false;
+        TwoToggle.isOn = false;
+        ThreeToggle.isOn = false;
 
     }
 
     private void Reset()
     {
-        numBoidsSlider.SetValueWithoutNotify(60);
+        NumBoidsSlider.SetValueWithoutNotify(60);
 
-        flockToggle.isOn = true;
-        alignToggle.isOn = true;
-        avoidToggle.isOn = true;
+        FlockToggle.isOn = true;
+        AlignToggle.isOn = true;
+        AvoidToggle.isOn = true;
 
-        avoidRadiusSlider.SetValueWithoutNotify(1);
-        avoidIntensitySlider.SetValueWithoutNotify(ReverseIntensitySliders(0.1f));
+        AvoidRadiusSlider.SetValueWithoutNotify(1);
+        AvoidIntensitySlider.SetValueWithoutNotify(ReverseIntensitySliders(0.1f));
 
-        alignRadiusSlider.SetValueWithoutNotify(5);
-        alignIntensitySlider.SetValueWithoutNotify(ReverseIntensitySliders(0.08f));
+        AlignRadiusSlider.SetValueWithoutNotify(5);
+        AlignIntensitySlider.SetValueWithoutNotify(ReverseIntensitySliders(0.08f));
 
-        flockRadiusSlider.SetValueWithoutNotify(5);
-        flockIntensitySlider.SetValueWithoutNotify(ReverseIntensitySliders(0.0003f));
+        FlockRadiusSlider.SetValueWithoutNotify(5);
+        FlockIntensitySlider.SetValueWithoutNotify(ReverseIntensitySliders(0.0003f));
 
-        avoidTeamsRadiusSlider.SetValueWithoutNotify(5);
-        avoidTeamsIntensitySlider.SetValueWithoutNotify(ReverseIntensitySliders(0.0003f));
+        AvoidTeamsRadiusSlider.SetValueWithoutNotify(5);
+        AvoidTeamsIntensitySlider.SetValueWithoutNotify(ReverseIntensitySliders(0.0003f));
+
+        AvoidObstaclesIntensitySlider.SetValueWithoutNotify(ReverseIntensitySliders(0.15f));
     }
 
     private float ReverseIntensitySliders(float input)

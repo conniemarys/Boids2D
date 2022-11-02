@@ -5,102 +5,132 @@ using UnityEngine.UI;
 
 public class FieldSecondAttempt : MonoBehaviour
 {
+
+    //====Variables====
+    //This class has variables for set-up and all rules surrounding the movement of the boids, many of which are changed by user input
+
+
+    //All prefabs for boids, obstacles and the Main Menu UI
     [SerializeField]
-    public GameObject greenPrefab;
-    public GameObject orangePrefab;
-    public GameObject purplePrefab;
-    public GameObject menuBackground;
+    public GameObject GreenPrefab;
+    public GameObject OrangePrefab;
+    public GameObject PurplePrefab;
+    public GameObject ObstaclePrefab;
+    public GameObject MenuBackground;
 
-    private float width = 26.625f;
-    private float height = 16;
+    //The width and height of the space the boids occupy
+    private float _width = 26.625f;
+    private float _height = 16;
 
-    public int spawnBoids;
+    //The number of boids to be spawned, changed by user input on the Main Menu
+    private int _spawnBoids;
 
-    public static List<BoidController> boids;
+    //These two lists are searched every frame, one containing all boids and the other all obstacles
+    //They are both cleared at the start of a new game
+    public static List<BoidController> Boids;
+    public static List<Obstacle> Obstacles;
 
+    //User chooses the number of different boid teams present in the game
     [SerializeField]
-    public int numTeams;
+    public int NumTeams;
 
+    //Toggles for use of rules
+    //The first three are available in-game and wiggle in Unity Editor
     [SerializeField]
     [Header("Options")]
-    private bool useFlock = true;
+    private bool _useFlock = true;
     [SerializeField]
-    private bool useAlignment = true;
+    private bool _useAlignment = true;
     [SerializeField]
-    private bool useSeparation = true;
+    private bool _useSeparation = true;
     [SerializeField]
-    private bool useWiggle = true;
+    private bool _useWiggle = true;
 
+    //The next six blocks contain the radius and weighting for each Rule
+    //These sit here and not in BoidRules.cs so they can be changed easily by the player.
+    //Values are then fed as arguments into the BoidRules methods.
     [SerializeField]
     [Header("Separation")]
-    private float separationRadius = 5f;
+    private float _separationRadius = 5f;
     [SerializeField]
-    private float separationWeighting = 0.05f;
+    private float _separationWeighting = 0.05f;
 
     [SerializeField]
     [Header("Alignment")]
-    private float alignmentRadius = 10f;
+    private float _alignmentRadius = 10f;
     [SerializeField]
-    private float alignmentWeighting;
+    private float _alignmentWeighting;
 
     [SerializeField]
     [Header("Flock")]
-    private float flockRadius = 10f;
+    private float _flockRadius = 10f;
     [SerializeField]
-    private float flockWeighting;
+    private float _flockWeighting;
 
     [SerializeField]
     [Header("Avoiding other Teams")]
-    private float avoidTeamRadius;
+    private float _avoidTeamRadius = 5;
     [SerializeField]
-    private float avoidTeamWeighting;
+    private float _avoidTeamWeighting = 000.3f;
 
+    //_pad declares the distance away from the wall that the rule begins to implement
+    //_turn is the severity of the turning angle
     [SerializeField]
     [Header("Bouncing")]
-    private float pad;
+    private float _pad;
     [SerializeField]
-    private float turn;
+    private float _turn;
     [SerializeField]
-    private float bounceWeighting;
+    private float _bounceWeighting;
+    [SerializeField]
+    private float _avoidObstacleWeighting;
+
+    [Header("Wiggle")]
+    [SerializeField]
+    private float _maxWiggle = 1f;
+    [SerializeField]
+    private int _wiggleFrame = 10;
+    [SerializeField]
+    private float _wiggleRadius = 10;
 
     [SerializeField]
     [Header("Other")]
-    private float steeringSpeed = 1000f;
+    private float _steeringSpeed = 1000f;
     [SerializeField]
-    private float totalSpeedWeighting = 1f;
-    [SerializeField]
-    private float maxWiggle = 1f;
-    [SerializeField]
-    private int wiggleFrame = 10;
-    [SerializeField]
-    private float wiggleRadius = 10;
+    private float _totalSpeedWeighting = 1f;
 
-    private float sepX;
-    private float sepY;
-    private float aliX;
-    private float aliY;
-    private float flockX;
-    private float flockY;
-    private float avoidTeamX;
-    private float avoidTeamY;
-    private float bounceX;
-    private float bounceY;
-    private float wiggleX;
-    private float wiggleY;
+    //The following are the X&Y coordinates created each turn by the Rules
+    private float _sepX;
+    private float _sepY;
+    private float _aliX;
+    private float _aliY;
+    private float _flockX;
+    private float _flockY;
+    private float _avoidTeamX;
+    private float _avoidTeamY;
+    private float _bounceX;
+    private float _bounceY;
+    private float _wiggleX;
+    private float _wiggleY;
+    private float _obstacleX;
+    private float _obstacleY;
 
-    private int currentFrame;
+    private int _currentFrame;
 
-    private UIManager uIManager;
+    private UIManager _uiManager;
 
-
+    //====Methods=====
 
     private void Start()
     {
-        boids = new List<BoidController>();
+        Boids = new List<BoidController>();
+        Obstacles = new List<Obstacle>();
 
-        uIManager = GetComponent<UIManager>();
+        _uiManager = GetComponent<UIManager>();
 
         MenuBoids();
+
+        ResetButton();
 
         AddListeners();
         
@@ -114,172 +144,217 @@ public class FieldSecondAttempt : MonoBehaviour
             case 1:
                 for (int i = 0; i < numBoids; i++)
                 {
-                    SpawnBoid(greenPrefab, BoidController.Team.green);
+                    SpawnBoid(GreenPrefab, BoidController.Team.green);
                 }
                 break;
             case 2:
                 for (int i = 0; i < numBoids / numTeams; i++)
                 {
-                    SpawnBoid(greenPrefab, BoidController.Team.green);
-                    SpawnBoid(orangePrefab, BoidController.Team.orange);
+                    SpawnBoid(GreenPrefab, BoidController.Team.green);
+                    SpawnBoid(OrangePrefab, BoidController.Team.orange);
                 }
                 break;
             case 3:
                 for (int i = 0; i < numBoids / numTeams; i++)
                 {
-                    SpawnBoid(greenPrefab, BoidController.Team.green);
-                    SpawnBoid(orangePrefab, BoidController.Team.orange);
-                    SpawnBoid(purplePrefab, BoidController.Team.purple);
+                    SpawnBoid(GreenPrefab, BoidController.Team.green);
+                    SpawnBoid(OrangePrefab, BoidController.Team.orange);
+                    SpawnBoid(PurplePrefab, BoidController.Team.purple);
                 }
                 break;
             default:
                 for (int i = 0; i < numBoids; i++)
                 {
-                    SpawnBoid(greenPrefab.gameObject, BoidController.Team.green);
+                    SpawnBoid(GreenPrefab.gameObject, BoidController.Team.green);
                 }
                 break;
         }
     }
 
+
     private void FixedUpdate()
     {
         Advance();
+
+
+    }
+
+
+    private void Update()
+    {
+        if (Input.GetMouseButtonDown(1))
+        {
+            Vector2 mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+            SpawnObstacle(mousePosition);
+        }
+    }
+
+
+    private void SpawnObstacle(Vector3 mousePosition)
+    {
+        var varObstacle = Instantiate(ObstaclePrefab);
+        varObstacle.transform.position = new Vector3(mousePosition.x, mousePosition.y, 0);
+        Obstacle obstacle = varObstacle.GetComponent<Obstacle>();
+        Obstacles.Add(obstacle);
     }
 
 
     private void Advance()
     {
 
-        foreach(BoidController boid in boids)
+        foreach(BoidController boid in Boids)
         {
-            if (useSeparation)
+            if (_useSeparation)
             {
-                (sepX, sepY) = BoidRules.Separation(boid, separationRadius, separationWeighting);
+                (_sepX, _sepY) = BoidRules.Separation(boid, _separationRadius, _separationWeighting);
             }
             else
             {
-                sepX = 0;
-                sepY = 0;
+                _sepX = 0;
+                _sepY = 0;
             }
 
-            if(useAlignment)
+            if(_useAlignment)
             {
-                (aliX, aliY) = BoidRules.Alignment(boid, alignmentRadius, alignmentWeighting);
+                (_aliX, _aliY) = BoidRules.Alignment(boid, _alignmentRadius, _alignmentWeighting);
             }
             else
             {
-                aliX = 0;
-                aliY = 0;
+                _aliX = 0;
+                _aliY = 0;
             }
 
-            if(useFlock)
+            if(_useFlock)
             {
-                (flockX, flockY) = BoidRules.Flock(boid, flockRadius, flockWeighting);
+                (_flockX, _flockY) = BoidRules.Flock(boid, _flockRadius, _flockWeighting);
             }
             else
             {
-                flockX = 0;
-                flockY = 0;
+                _flockX = 0;
+                _flockY = 0;
             }
 
-            if(useWiggle)
+            if(_useWiggle)
             {
-                (wiggleX, wiggleY) = Wiggle(boid);
+                (_wiggleX, _wiggleY) = Wiggle(boid);
             }
             else
             {
-                wiggleX = 0;
-                wiggleY = 0;
+                _wiggleX = 0;
+                _wiggleY = 0;
             }
 
-            if(numTeams > 1)
+            (_obstacleX, _obstacleY) = BoidRules.AvoidObstacles(boid, Obstacles, _avoidObstacleWeighting);
+
+            if(NumTeams > 1)
             {
-                (avoidTeamX, avoidTeamY) = BoidRules.AvoidTeams(boid, avoidTeamRadius, avoidTeamWeighting);
+                (_avoidTeamX, _avoidTeamY) = BoidRules.AvoidTeams(boid, _avoidTeamRadius, _avoidTeamWeighting);
             }
             else
             {
-                avoidTeamX = 0;
-                avoidTeamY = 0;
+                _avoidTeamX = 0;
+                _avoidTeamY = 0;
             }
 
-            (bounceX, bounceY) = BounceOffWalls(boid);
+            (_bounceX, _bounceY) = BounceOffWalls(boid);
 
-            boid.SpeedX += (sepX + aliX + flockX + bounceX + avoidTeamX) / totalSpeedWeighting + wiggleX;
-            boid.SpeedY += (sepY + aliY + flockY + bounceY + avoidTeamY) / totalSpeedWeighting + wiggleY;
+            boid.SpeedX += (_sepX + _aliX + _flockX + _bounceX + _avoidTeamX + _obstacleX) / _totalSpeedWeighting + _wiggleX;
+            boid.SpeedY += (_sepY + _aliY + _flockY + _bounceY + _avoidTeamY + _obstacleY) / _totalSpeedWeighting + _wiggleY;
         }
     }
-
 
 
     private void SpawnBoid(GameObject prefab, BoidController.Team team)
     {
         var boidInstance = Instantiate(prefab, transform);
-        boidInstance.transform.localPosition += new Vector3(Random.Range(-width, width), Random.Range(-height, height), 0);
+        boidInstance.transform.localPosition += new Vector3(Random.Range(-_width, _width), Random.Range(-_height, _height), 0);
         BoidController boidController = boidInstance.GetComponent<BoidController>();
         boidController.SpeedX = Random.Range(-2, 2);
         boidController.SpeedY = Random.Range(-2, 2);
-        boidController.SteeringSpeed = steeringSpeed;
+        boidController.SteeringSpeed = _steeringSpeed;
         boidController.team = team;
-        boids.Add(boidController);
+        Boids.Add(boidController);
     }
+
 
     private void MenuBoids()
     {
-        if (boids.Count > 0)
+        if (Boids.Count > 0)
         {
-            for (int i = boids.Count - 1; i >= 0; i--)
+            for (int i = Boids.Count - 1; i >= 0; i--)
             {
-                Destroy(boids[i].gameObject);
+                Destroy(Boids[i].gameObject);
             }
 
-            boids.Clear();
+            Boids.Clear();
         }
 
-        menuBackground.SetActive(true);
+        if (Obstacles.Count > 0)
+        {
+            for (int i = Obstacles.Count - 1; i >= 0; i--)
+            {
+                Destroy(Obstacles[i].gameObject);
+            }
+
+            Obstacles.Clear();
+        }
+
+        MenuBackground.SetActive(true);
         SpawnTeams(2, 20);
     }
 
 
     private void NewGame()
     {
-        if (boids.Count > 0)
+        if (Boids.Count > 0)
         {
-            for (int i = boids.Count - 1; i >= 0; i--)
+            for (int i = Boids.Count - 1; i >= 0; i--)
             {
-                Destroy(boids[i].gameObject);
+                Destroy(Boids[i].gameObject);
             }
 
-            boids.Clear();
+            Boids.Clear();
         }
 
-        SpawnTeams(numTeams, (int)uIManager.numberofBoidsSlider.value);
+        if (Obstacles.Count > 0)
+        {
+            for (int i = Obstacles.Count - 1; i >= 0; i--)
+            {
+                Destroy(Obstacles[i].gameObject);
+            }
 
-        menuBackground.SetActive(false);
+            Obstacles.Clear();
+        }
+
+        SpawnTeams(NumTeams, _spawnBoids);
+
+        MenuBackground.SetActive(false);
 
     }
+
 
     private (float bounceX, float bounceY) BounceOffWalls(BoidController boid)
     {
         Vector3 bounceDirection = Vector3.zero;
 
-        if (boid.transform.position.x < -width + pad)
+        if (boid.transform.position.x < -_width + _pad)
         {
-            bounceDirection.x += turn;
+            bounceDirection.x += _turn;
         }
-        if (boid.transform.position.x > width - pad)
+        if (boid.transform.position.x > _width - _pad)
         {
-            bounceDirection.x -= turn;
+            bounceDirection.x -= _turn;
         }
-        if (boid.transform.position.y > height - pad)
+        if (boid.transform.position.y > _height - _pad)
         {
-            bounceDirection.y -= turn;
+            bounceDirection.y -= _turn;
         }
-        if (boid.transform.position.y < -height + pad)
+        if (boid.transform.position.y < -_height + _pad)
         {
-            bounceDirection.y += turn;
+            bounceDirection.y += _turn;
         }
 
-        bounceDirection = bounceDirection.normalized * bounceWeighting;
+        bounceDirection = bounceDirection.normalized * _bounceWeighting;
 
         return (bounceDirection.x, bounceDirection.y);
     }
@@ -287,12 +362,12 @@ public class FieldSecondAttempt : MonoBehaviour
 
     private (float wiggleX, float wiggleY) Wiggle(BoidController boid)
     {
-        wiggleX = 0;
-        wiggleY = 0;
+        _wiggleX = 0;
+        _wiggleY = 0;
 
         int wiggleCount = 0;
 
-        foreach (BoidController otherBoid in boids)
+        foreach (BoidController otherBoid in Boids)
         {
             if (otherBoid == boid)
                 continue;
@@ -301,7 +376,7 @@ public class FieldSecondAttempt : MonoBehaviour
 
             var distance = Vector3.Distance(boid.transform.position, otherBoid.transform.position);
 
-            if (distance < wiggleRadius)
+            if (distance < _wiggleRadius)
             {
                 wiggleCount++;
             }
@@ -309,93 +384,100 @@ public class FieldSecondAttempt : MonoBehaviour
 
         if(wiggleCount > 3)
         {
-            if (currentFrame == wiggleFrame)
+            if (_currentFrame == _wiggleFrame)
             {
-                wiggleX = Random.Range(-maxWiggle, maxWiggle);
-                wiggleY = Random.Range(-maxWiggle, maxWiggle);
-                currentFrame = 0;
+                _wiggleX = Random.Range(-_maxWiggle, _maxWiggle);
+                _wiggleY = Random.Range(-_maxWiggle, _maxWiggle);
+                _currentFrame = 0;
             }
         }
 
-        currentFrame++;
-        return (wiggleX, wiggleY);
+        _currentFrame++;
+        return (_wiggleX, _wiggleY);
     }
 
 
     private void ResetButton()
     {
-        spawnBoids = 100;
+        _spawnBoids = 60;
 
-        useFlock = true;
-        useAlignment = true;
-        useSeparation = true;
+        _useFlock = true;
+        _useAlignment = true;
+        _useSeparation = true;
 
-        separationRadius = 1;
-        separationWeighting = 0.1f;
+        _separationRadius = 1;
+        _separationWeighting = 0.1f;
 
-        alignmentRadius = 5;
-        alignmentWeighting = 0.08f;
+        _alignmentRadius = 5;
+        _alignmentWeighting = 0.08f;
 
-        flockRadius = 5;
-        flockWeighting = 0.0003f;
+        _flockRadius = 5;
+        _flockWeighting = 0.0003f;
 
-        avoidTeamRadius = 5;
-        avoidTeamWeighting = 0.0003f;
+        _avoidTeamRadius = 5;
+        _avoidTeamWeighting = 0.0003f;
+
+        _avoidObstacleWeighting = 0.15f;
     }
 
     private void AvoidRadius(float input)
     {
-        separationRadius = input;
+        _separationRadius = input;
     }
 
     private void AvoidIntensity(float input)
     {
-        separationWeighting = IntensitySliders(input);
+        _separationWeighting = IntensitySliders(input);
     }
 
     private void AlignRadius(float input)
     {
-        alignmentRadius = input;
+        _alignmentRadius = input;
     }
 
     private void AlignIntensity(float input)
     {
-        alignmentWeighting = IntensitySliders(input);
+        _alignmentWeighting = IntensitySliders(input);
     }
 
     private void FlockRadius(float input)
     {
-        flockRadius = input;
+        _flockRadius = input;
     }
 
     private void FlockIntensity(float input)
     {
-        flockWeighting = IntensitySliders(input);
+        _flockWeighting = IntensitySliders(input);
     }
 
     private void AvoidTeamsRadius(float input)
     {
-        avoidTeamRadius = input;
+        _avoidTeamRadius = input;
     }
 
     private void AvoidTeamsIntensity(float input)
     {
-        avoidTeamWeighting = IntensitySliders(input);
+        _avoidTeamWeighting = IntensitySliders(input);
+    }
+
+    private void AvoidObstaclesIntensity(float input)
+    {
+        _avoidObstacleWeighting = IntensitySliders(input);
     }
 
     private void FlockToggle(bool input)
     {
-        useFlock = input;
+        _useFlock = input;
     }
 
     private void AvoidToggle(bool input)
     {
-        useSeparation = input;
+        _useSeparation = input;
     }
 
     private void AlignToggle(bool input)
     {
-        useAlignment = input;
+        _useAlignment = input;
     }
 
     private float IntensitySliders(float input)
@@ -405,54 +487,57 @@ public class FieldSecondAttempt : MonoBehaviour
 
     private void OneToggle(bool input)
     {
-        if(input)
+        if(_uiManager.OneToggle.isOn)
         {
-            numTeams = 1;
-            uIManager.twoToggle.isOn =false;
-            uIManager.threeToggle.isOn = false;
+            NumTeams = 1;
+            _uiManager.TwoToggle.isOn =false;
+            _uiManager.ThreeToggle.isOn = false;
+            Debug.Log($"One Toggle: Number of Teams: {NumTeams}");
         }
         else
         {
-            numTeams = 0;
+  
         }
     }
 
     private void TwoToggle(bool input)
     {
-        if (input)
+        if (_uiManager.TwoToggle.isOn)
         {
-            numTeams = 2;
-            uIManager.oneToggle.isOn = false;
-            uIManager.threeToggle.isOn = false;
+            NumTeams = 2;
+            _uiManager.OneToggle.isOn = false;
+            _uiManager.ThreeToggle.isOn = false;
+            Debug.Log($"Two Toggle: Number of Teams: {NumTeams}");
         }
         else
         {
-            numTeams = 0;
+  
         }
     }
 
     private void ThreeToggle(bool input)
     {
-        if (input)
+        if (_uiManager.ThreeToggle.isOn)
         {
-            numTeams = 3;
-            uIManager.oneToggle.isOn = false;
-            uIManager.twoToggle.isOn = false;
+            NumTeams = 3;
+            _uiManager.OneToggle.isOn = false;
+            _uiManager.TwoToggle.isOn = false;
+            Debug.Log($"Three Toggle: Number of Teams: {NumTeams}");
         }
         else
         {
-            numTeams = 0;
+        
         }
     }
 
     private void NumBoids(float input)
     {
-        spawnBoids = (int)input;
+        _spawnBoids = (int)input;
     }
 
     private void StartButton()
     {
-        if (!uIManager.oneToggle.isOn && !uIManager.twoToggle.isOn && !uIManager.threeToggle.isOn)
+        if (!_uiManager.OneToggle.isOn && !_uiManager.TwoToggle.isOn && !_uiManager.ThreeToggle.isOn)
         {
             return;
         }
@@ -464,32 +549,35 @@ public class FieldSecondAttempt : MonoBehaviour
 
     private void AddListeners()
     {
-        uIManager.flockToggle.onValueChanged.AddListener(FlockToggle);
-        uIManager.alignToggle.onValueChanged.AddListener(AlignToggle);
-        uIManager.avoidToggle.onValueChanged.AddListener(AvoidToggle);
+        _uiManager.FlockToggle.onValueChanged.AddListener(FlockToggle);
+        _uiManager.AlignToggle.onValueChanged.AddListener(AlignToggle);
+        _uiManager.AvoidToggle.onValueChanged.AddListener(AvoidToggle);
 
-        uIManager.flockRadiusSlider.onValueChanged.AddListener(FlockRadius);
-        uIManager.flockIntensitySlider.onValueChanged.AddListener(FlockIntensity);
+        _uiManager.FlockRadiusSlider.onValueChanged.AddListener(FlockRadius);
+        _uiManager.FlockIntensitySlider.onValueChanged.AddListener(FlockIntensity);
 
-        uIManager.alignRadiusSlider.onValueChanged.AddListener(AlignRadius);
-        uIManager.alignIntensitySlider.onValueChanged.AddListener(AlignIntensity);
+        _uiManager.AlignRadiusSlider.onValueChanged.AddListener(AlignRadius);
+        _uiManager.AlignIntensitySlider.onValueChanged.AddListener(AlignIntensity);
 
-        uIManager.avoidRadiusSlider.onValueChanged.AddListener(AvoidRadius);
-        uIManager.avoidIntensitySlider.onValueChanged.AddListener(AvoidIntensity);
+        _uiManager.AvoidRadiusSlider.onValueChanged.AddListener(AvoidRadius);
+        _uiManager.AvoidIntensitySlider.onValueChanged.AddListener(AvoidIntensity);
 
-        uIManager.avoidTeamsRadiusSlider.onValueChanged.AddListener(AvoidTeamsRadius);
-        uIManager.avoidTeamsIntensitySlider.onValueChanged.AddListener(AvoidTeamsIntensity);
+        _uiManager.AvoidTeamsRadiusSlider.onValueChanged.AddListener(AvoidTeamsRadius);
+        _uiManager.AvoidTeamsIntensitySlider.onValueChanged.AddListener(AvoidTeamsIntensity);
 
-        uIManager.resetButton.onClick.AddListener(ResetButton);
+        _uiManager.AvoidObstaclesIntensitySlider.onValueChanged.AddListener(AvoidObstaclesIntensity);
 
-        uIManager.oneToggle.onValueChanged.AddListener(OneToggle);
-        uIManager.twoToggle.onValueChanged.AddListener(TwoToggle);
-        uIManager.threeToggle.onValueChanged.AddListener(ThreeToggle);
+        _uiManager.ResetButton.onClick.AddListener(ResetButton);
 
-        uIManager.numBoidsSlider.onValueChanged.AddListener(NumBoids);
+        _uiManager.OneToggle.onValueChanged.AddListener(OneToggle);
+        _uiManager.TwoToggle.onValueChanged.AddListener(TwoToggle);
+        _uiManager.ThreeToggle.onValueChanged.AddListener(ThreeToggle);
 
-        uIManager.startButton.onClick.AddListener(StartButton);
-        uIManager.ingameQuitButton.onClick.AddListener(MenuBoids);
+        _uiManager.NumBoidsSlider.onValueChanged.AddListener(NumBoids);
+
+        _uiManager.StartButton.onClick.AddListener(StartButton);
+        _uiManager.IngameQuitButton.onClick.AddListener(MenuBoids);
+
     }
 
 }

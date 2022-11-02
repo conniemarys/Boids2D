@@ -4,20 +4,13 @@ using UnityEngine;
 
 public class BoidRules
 {
-    /// <summary>
-    /// This class holds only rules: Alignment, Separation and Flock to create the simulation. 
-    /// </summary>
-    /// <param name="boid"></param>
-    /// <param name="alignmentRadius"></param>
-    /// <param name="alignmentWeighting"></param>
-    /// <returns></returns>
 
-    public static (float aliX, float aliY) Alignment(BoidController boid, float alignmentRadius, float alignmentWeighting)
+    public static Vector3 Alignment(BoidController boid, float alignmentRadius, float alignmentWeighting)
     {
         Vector3 alignmentDirection = Vector3.zero;
         int alignmentCount = 0;
 
-        foreach (BoidController otherBoid in FieldSecondAttempt.boids)
+        foreach (BoidController otherBoid in FieldSecondAttempt.Boids)
         {
             if (otherBoid == boid)
                 continue;
@@ -38,16 +31,16 @@ public class BoidRules
 
         alignmentDirection = alignmentDirection.normalized * alignmentWeighting;
 
-        return (alignmentDirection.x, alignmentDirection.y);
+        return alignmentDirection;
     }
 
-    public static (float sepX, float sepY) Separation(BoidController boid, float separationRadius, float separationWeighting)
+    public static Vector3 Separation(BoidController boid, float separationRadius, float separationWeighting)
     {
         //separation vars
         Vector3 separationDirection = Vector3.zero;
         int separationCount = 0;
 
-        foreach (BoidController otherBoid in FieldSecondAttempt.boids)
+        foreach (BoidController otherBoid in FieldSecondAttempt.Boids)
         {
             //skip self
             if (otherBoid == boid)
@@ -80,7 +73,7 @@ public class BoidRules
     {
         Vector3 flockDirection = Vector3.zero;
         int flockCount = 0;
-        foreach (BoidController otherBoid in FieldSecondAttempt.boids)
+        foreach (BoidController otherBoid in FieldSecondAttempt.Boids)
         {
             if (otherBoid == boid)
                 continue;
@@ -110,7 +103,7 @@ public class BoidRules
         Vector3 avoidTeamDirection = Vector3.zero;
         int otherTeamCount = 0;
 
-        foreach (BoidController otherBoid in FieldSecondAttempt.boids)
+        foreach (BoidController otherBoid in FieldSecondAttempt.Boids)
         {
             if (otherBoid == boid)
                 continue;
@@ -136,7 +129,38 @@ public class BoidRules
 
         //apply to steering
         return (avoidTeamDirection.x, avoidTeamDirection.y);
-    
+
+    }
+
+    public static (float obstacleX, float obstacleY) AvoidObstacles(BoidController boid, List<Obstacle> obstacles, float avoidObstaclesWeighting)
+    {
+        Vector3 avoidObstacleDirection = Vector2.zero;
+        int obstacleCount = 0;
+
+        if(obstacles.Count > 0)
+        {
+            foreach(Obstacle obstacle in obstacles)
+            {
+                var distance = Vector3.Distance(boid.transform.position, obstacle.transform.position);
+
+                if (distance < obstacle.radius + 5)
+                {
+                    avoidObstacleDirection += (obstacle.transform.position - boid.transform.position) * (10 / distance);
+                }
+            }
+
+        }
+
+        if(obstacleCount > 0)
+        {
+            avoidObstacleDirection /= obstacleCount;
+        }
+
+        avoidObstacleDirection = -avoidObstacleDirection.normalized * avoidObstaclesWeighting;
+
+        return (avoidObstacleDirection.x, avoidObstacleDirection.y);
+            
+        
     }
 
 }

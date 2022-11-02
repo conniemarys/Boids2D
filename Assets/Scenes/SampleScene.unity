@@ -123,6 +123,17 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
+--- !u!114 &62041708 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 3162027810925974607, guid: c8ed485ed5b8a41de9f58a43f28756a7, type: 3}
+  m_PrefabInstance: {fileID: 4990431369389877386}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 67db9e8f0e2ae9c40bc1e2b64352a6b4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &152391759 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 4990431369271605445, guid: c8ed485ed5b8a41de9f58a43f28756a7, type: 3}
@@ -598,6 +609,7 @@ MonoBehaviour:
   greenPrefab: {fileID: 1756943677553682866, guid: 55e0e0765b7d9442f919911d50c125b6, type: 3}
   orangePrefab: {fileID: 1756943677553682866, guid: fd5998198ec8e40718d8515924377a74, type: 3}
   purplePrefab: {fileID: 1756943677553682866, guid: bf304d937e5a1494fa7a1d79376af1a8, type: 3}
+  obstaclePrefab: {fileID: 1725517093964716074, guid: 1edd1385994a74e9189fea2b7ec7d234, type: 3}
   menuBackground: {fileID: 1636479533}
   spawnBoids: 100
   numTeams: 3
@@ -608,14 +620,15 @@ MonoBehaviour:
   separationRadius: 1
   separationWeighting: 0.1
   alignmentRadius: 5
-  alignmentWeighting: 0.08
+  alignmentWeighting: 0.15
   flockRadius: 5
   flockWeighting: 0.0003
-  avoidTeamRadius: 0
+  avoidTeamRadius: 5
   avoidTeamWeighting: 0
   pad: 2
   turn: 0.5
   bounceWeighting: 1
+  avoidObstacleWeighting: 0.15
   steeringSpeed: 50
   totalSpeedWeighting: 2
   maxWiggle: 1
@@ -668,6 +681,7 @@ MonoBehaviour:
   alignIntensitySlider: {fileID: 2015785609}
   avoidTeamsRadiusSlider: {fileID: 1405787764}
   avoidTeamsIntensitySlider: {fileID: 565986422}
+  avoidObstaclesIntensitySlider: {fileID: 62041708}
   resetButton: {fileID: 1529042234}
   ingameQuitButton: {fileID: 238715279}
   tabToggle: {fileID: 650777722}
@@ -993,33 +1007,13 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 569159635860024305, guid: c8ed485ed5b8a41de9f58a43f28756a7, type: 3}
-      propertyPath: m_Pivot.y
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 569159635860024305, guid: c8ed485ed5b8a41de9f58a43f28756a7, type: 3}
-      propertyPath: m_AnchorMax.x
-      value: 0.5
-      objectReference: {fileID: 0}
-    - target: {fileID: 569159635860024305, guid: c8ed485ed5b8a41de9f58a43f28756a7, type: 3}
-      propertyPath: m_AnchorMax.y
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 569159635860024305, guid: c8ed485ed5b8a41de9f58a43f28756a7, type: 3}
-      propertyPath: m_AnchorMin.x
-      value: 0.5
-      objectReference: {fileID: 0}
-    - target: {fileID: 569159635860024305, guid: c8ed485ed5b8a41de9f58a43f28756a7, type: 3}
-      propertyPath: m_AnchorMin.y
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 569159635860024305, guid: c8ed485ed5b8a41de9f58a43f28756a7, type: 3}
+    - target: {fileID: 1358037692463537190, guid: c8ed485ed5b8a41de9f58a43f28756a7, type: 3}
       propertyPath: m_AnchoredPosition.x
       value: 60
       objectReference: {fileID: 0}
-    - target: {fileID: 569159635860024305, guid: c8ed485ed5b8a41de9f58a43f28756a7, type: 3}
+    - target: {fileID: 1358037692463537190, guid: c8ed485ed5b8a41de9f58a43f28756a7, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -450
+      value: -40
       objectReference: {fileID: 0}
     - target: {fileID: 1999595246659277600, guid: c8ed485ed5b8a41de9f58a43f28756a7, type: 3}
       propertyPath: m_AnchorMax.x
@@ -1041,6 +1035,14 @@ PrefabInstance:
       propertyPath: m_AnchorMin.x
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 2752872938495212797, guid: c8ed485ed5b8a41de9f58a43f28756a7, type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2752872938495212797, guid: c8ed485ed5b8a41de9f58a43f28756a7, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 2860358741493950090, guid: c8ed485ed5b8a41de9f58a43f28756a7, type: 3}
       propertyPath: m_AnchorMax.x
       value: 0
@@ -1055,6 +1057,18 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4429535911691435535, guid: c8ed485ed5b8a41de9f58a43f28756a7, type: 3}
       propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4905886167438548239, guid: c8ed485ed5b8a41de9f58a43f28756a7, type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4905886167438548239, guid: c8ed485ed5b8a41de9f58a43f28756a7, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4905886167438548239, guid: c8ed485ed5b8a41de9f58a43f28756a7, type: 3}
+      propertyPath: m_AnchorMin.x
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4990431368027560129, guid: c8ed485ed5b8a41de9f58a43f28756a7, type: 3}
@@ -1088,6 +1102,17 @@ PrefabInstance:
     - target: {fileID: 4990431368078894827, guid: c8ed485ed5b8a41de9f58a43f28756a7, type: 3}
       propertyPath: m_AnchorMin.x
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4990431368321323536, guid: c8ed485ed5b8a41de9f58a43f28756a7, type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 91.3687
+      objectReference: {fileID: 0}
+    - target: {fileID: 4990431368321323537, guid: c8ed485ed5b8a41de9f58a43f28756a7, type: 3}
+      propertyPath: m_Text
+      value: 'Press [tab] to toggle Options Menu on/off
+
+        Right click anywhere
+        on screen to add an obstacle'
       objectReference: {fileID: 0}
     - target: {fileID: 4990431368357082508, guid: c8ed485ed5b8a41de9f58a43f28756a7, type: 3}
       propertyPath: m_AnchorMax.x
@@ -1205,10 +1230,6 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 4990431369136170567, guid: c8ed485ed5b8a41de9f58a43f28756a7, type: 3}
-      propertyPath: tabToggle
-      value: 
-      objectReference: {fileID: 650777722}
     - target: {fileID: 4990431369189760723, guid: c8ed485ed5b8a41de9f58a43f28756a7, type: 3}
       propertyPath: m_AnchorMax.x
       value: 0
@@ -1291,6 +1312,10 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6530309309808494162, guid: c8ed485ed5b8a41de9f58a43f28756a7, type: 3}
       propertyPath: m_AnchorMin.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8757083556355592568, guid: c8ed485ed5b8a41de9f58a43f28756a7, type: 3}
+      propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
