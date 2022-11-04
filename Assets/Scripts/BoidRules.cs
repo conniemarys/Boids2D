@@ -5,7 +5,7 @@ using UnityEngine;
 public class BoidRules
 {
 
-    public static Vector3 Alignment(BoidController boid, float alignmentRadius, float alignmentWeighting)
+    public static (float aliX, float aliY) Alignment(BoidController boid, float alignmentRadius, float alignmentWeighting)
     {
         Vector3 alignmentDirection = Vector3.zero;
         int alignmentCount = 0;
@@ -31,10 +31,10 @@ public class BoidRules
 
         alignmentDirection = alignmentDirection.normalized * alignmentWeighting;
 
-        return alignmentDirection;
+        return (alignmentDirection.x, alignmentDirection.y);
     }
 
-    public static Vector3 Separation(BoidController boid, float separationRadius, float separationWeighting)
+    public static (float sepX, float sepY) Separation(BoidController boid, float separationRadius, float separationWeighting)
     {
         //separation vars
         Vector3 separationDirection = Vector3.zero;

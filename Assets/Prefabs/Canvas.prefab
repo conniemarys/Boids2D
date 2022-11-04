@@ -4277,7 +4277,7 @@ RectTransform:
   m_AnchorMin: {x: 1, y: 1}
   m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: -50, y: -50}
-  m_SizeDelta: {x: 400, y: 30}
+  m_SizeDelta: {x: 400, y: 91.3687}
   m_Pivot: {x: 1, y: 1}
 --- !u!222 &4990431368321323542
 CanvasRenderer:
@@ -4320,7 +4320,10 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Press [tab] to toggle Options Menu on/off
+  m_Text: 'Press [tab] to toggle Options Menu on/off
+
+    Right click anywhere on
+    screen to add an obstacle'
 --- !u!1 &4990431368336013218
 GameObject:
   m_ObjectHideFlags: 0
@@ -6619,41 +6622,37 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4990431369136170562}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: e82ea8e5a79564949b7544296ffaf8fb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  optionsMenu: {fileID: 4990431368065140475}
-  flockSettings: {fileID: 4990431368571121142}
-  avoidSettings: {fileID: 4990431368158365323}
-  alignSettings: {fileID: 4990431368090298853}
-  menuScreenBool: 0
-  numBoidsSlider: {fileID: 4990431369271605445}
-  flockToggle: {fileID: 4990431368916641212}
-  avoidToggle: {fileID: 4990431369246469007}
-  alignToggle: {fileID: 4990431368551669309}
-  flockRadiusSlider: {fileID: 4990431370004265494}
-  flockIntensitySlider: {fileID: 4990431369870375280}
-  avoidRadiusSlider: {fileID: 4990431369153631308}
-  avoidIntensitySlider: {fileID: 4990431369344991070}
-  alignRadiusSlider: {fileID: 4990431369864193623}
-  alignIntensitySlider: {fileID: 4990431368448399875}
-  avoidTeamsRadiusSlider: {fileID: 3388892863150494470}
-  avoidTeamsIntensitySlider: {fileID: 5646796662360964446}
-  avoidObstaclesIntensitySlider: {fileID: 3162027810925974607}
-  resetButton: {fileID: 4990431367961542064}
-  ingameQuitButton: {fileID: 4990431369353603333}
-  tabToggle: {fileID: 4990431368321323539}
-  menuScreen: {fileID: 1697973800}
-  oneToggle: {fileID: 8937334255512318452}
-  twoToggle: {fileID: 7213553696708316675}
-  threeToggle: {fileID: 669433853536264729}
-  numberofBoidsSlider: {fileID: 871977867919751444}
-  numberofBoidsText: {fileID: 1999082430425896027}
-  invalidText: {fileID: 8757083556355592568}
-  startButton: {fileID: 3554049231623018476}
-  menuQuitButton: {fileID: 2745439196621235891}
+  OptionsMenu: {fileID: 0}
+  MenuScreenBool: 0
+  FlockToggle: {fileID: 0}
+  AvoidToggle: {fileID: 0}
+  AlignToggle: {fileID: 0}
+  FlockRadiusSlider: {fileID: 0}
+  FlockIntensitySlider: {fileID: 0}
+  AvoidRadiusSlider: {fileID: 0}
+  AvoidIntensitySlider: {fileID: 0}
+  AlignRadiusSlider: {fileID: 0}
+  AlignIntensitySlider: {fileID: 0}
+  AvoidTeamsRadiusSlider: {fileID: 0}
+  AvoidTeamsIntensitySlider: {fileID: 0}
+  AvoidObstaclesIntensitySlider: {fileID: 0}
+  ResetButton: {fileID: 0}
+  IngameQuitButton: {fileID: 0}
+  TabToggle: {fileID: 0}
+  MenuScreen: {fileID: 0}
+  OneToggle: {fileID: 0}
+  TwoToggle: {fileID: 0}
+  ThreeToggle: {fileID: 0}
+  NumberOfBoidsSlider: {fileID: 0}
+  NumberofBoidsText: {fileID: 0}
+  InvalidText: {fileID: 0}
+  StartButton: {fileID: 0}
+  MenuQuitButton: {fileID: 0}
 --- !u!1 &4990431369153631310
 GameObject:
   m_ObjectHideFlags: 0
@@ -10582,7 +10581,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: -46}
+  m_AnchoredPosition: {x: 60, y: -40}
   m_SizeDelta: {x: 450, y: 30}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &5254640611897951551

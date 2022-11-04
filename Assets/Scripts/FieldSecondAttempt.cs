@@ -573,7 +573,7 @@ public class FieldSecondAttempt : MonoBehaviour
         _uiManager.TwoToggle.onValueChanged.AddListener(TwoToggle);
         _uiManager.ThreeToggle.onValueChanged.AddListener(ThreeToggle);
 
-        _uiManager.NumBoidsSlider.onValueChanged.AddListener(NumBoids);
+        _uiManager.NumberOfBoidsSlider.onValueChanged.AddListener(NumBoids);
 
         _uiManager.StartButton.onClick.AddListener(StartButton);
         _uiManager.IngameQuitButton.onClick.AddListener(MenuBoids);

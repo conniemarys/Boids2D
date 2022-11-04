@@ -6,15 +6,10 @@ using UnityEngine.UI;
 public class UIManager : MonoBehaviour
 {
     public GameObject OptionsMenu;
-    public GameObject FlockSettings;
-    public GameObject AvoidSettings;
-    public GameObject AlignSettings;
 
     public bool MenuScreenBool;
 
     [Header ("InGame UI")]
-    [SerializeField]
-    public Slider NumBoidsSlider;
 
     [SerializeField]
     public Toggle FlockToggle;
@@ -63,7 +58,7 @@ public class UIManager : MonoBehaviour
     public Toggle TwoToggle;
     public Toggle ThreeToggle;
 
-    public Slider NumberofBoidsSlider;
+    public Slider NumberOfBoidsSlider;
     public GameObject NumberofBoidsText;
     public GameObject InvalidText;
 
@@ -83,7 +78,7 @@ public class UIManager : MonoBehaviour
         MenuQuitButton.onClick.AddListener(QuitButton);
         IngameQuitButton.onClick.AddListener(InGameQuitButton);
 
-        NumberofBoidsSlider.onValueChanged.AddListener(ChangeText);
+        NumberOfBoidsSlider.onValueChanged.AddListener(ChangeText);
 
         StartButton.onClick.AddListener(OnStartButton);
 
@@ -149,7 +144,7 @@ public class UIManager : MonoBehaviour
 
     private void Reset()
     {
-        NumBoidsSlider.SetValueWithoutNotify(60);
+        NumberOfBoidsSlider.SetValueWithoutNotify(60);
 
         FlockToggle.isOn = true;
         AlignToggle.isOn = true;
