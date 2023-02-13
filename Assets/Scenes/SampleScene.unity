@@ -134,17 +134,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 67db9e8f0e2ae9c40bc1e2b64352a6b4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &152391759 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 4990431369271605445, guid: c8ed485ed5b8a41de9f58a43f28756a7, type: 3}
-  m_PrefabInstance: {fileID: 4990431369389877386}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 67db9e8f0e2ae9c40bc1e2b64352a6b4, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &174887099
 GameObject:
   m_ObjectHideFlags: 0
@@ -449,11 +438,6 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 4990431368065140475, guid: c8ed485ed5b8a41de9f58a43f28756a7, type: 3}
   m_PrefabInstance: {fileID: 4990431369389877386}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &1385038191 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 4990431368090298853, guid: c8ed485ed5b8a41de9f58a43f28756a7, type: 3}
-  m_PrefabInstance: {fileID: 4990431369389877386}
-  m_PrefabAsset: {fileID: 0}
 --- !u!114 &1405787764 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 3388892863150494470, guid: c8ed485ed5b8a41de9f58a43f28756a7, type: 3}
@@ -465,11 +449,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 67db9e8f0e2ae9c40bc1e2b64352a6b4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!1 &1467543041 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 4990431368158365323, guid: c8ed485ed5b8a41de9f58a43f28756a7, type: 3}
-  m_PrefabInstance: {fileID: 4990431369389877386}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1484052388
 GameObject:
   m_ObjectHideFlags: 0
@@ -606,34 +585,33 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ca448d710a3e94d51bcf6422c7cf268f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  greenPrefab: {fileID: 1756943677553682866, guid: 55e0e0765b7d9442f919911d50c125b6, type: 3}
-  orangePrefab: {fileID: 1756943677553682866, guid: fd5998198ec8e40718d8515924377a74, type: 3}
-  purplePrefab: {fileID: 1756943677553682866, guid: bf304d937e5a1494fa7a1d79376af1a8, type: 3}
-  obstaclePrefab: {fileID: 1725517093964716074, guid: 1edd1385994a74e9189fea2b7ec7d234, type: 3}
-  menuBackground: {fileID: 1636479533}
-  spawnBoids: 100
-  numTeams: 3
-  useFlock: 1
-  useAlignment: 1
-  useSeparation: 1
-  useWiggle: 1
-  separationRadius: 1
-  separationWeighting: 0.1
-  alignmentRadius: 5
-  alignmentWeighting: 0.15
-  flockRadius: 5
-  flockWeighting: 0.0003
-  avoidTeamRadius: 5
-  avoidTeamWeighting: 0
-  pad: 2
-  turn: 0.5
-  bounceWeighting: 1
-  avoidObstacleWeighting: 0.15
-  steeringSpeed: 50
-  totalSpeedWeighting: 2
-  maxWiggle: 1
-  wiggleFrame: 10
-  wiggleRadius: 10
+  GreenPrefab: {fileID: 1756943677553682866, guid: 55e0e0765b7d9442f919911d50c125b6, type: 3}
+  OrangePrefab: {fileID: 1756943677553682866, guid: fd5998198ec8e40718d8515924377a74, type: 3}
+  PurplePrefab: {fileID: 1756943677553682866, guid: bf304d937e5a1494fa7a1d79376af1a8, type: 3}
+  ObstaclePrefab: {fileID: 1725517093964716074, guid: 1edd1385994a74e9189fea2b7ec7d234, type: 3}
+  MenuBackground: {fileID: 1636479533}
+  NumTeams: 0
+  _useFlock: 1
+  _useAlignment: 1
+  _useSeparation: 1
+  _useWiggle: 1
+  _separationRadius: 5
+  _separationWeighting: 0.05
+  _alignmentRadius: 10
+  _alignmentWeighting: 0
+  _flockRadius: 10
+  _flockWeighting: 0
+  _avoidTeamRadius: 5
+  _avoidTeamWeighting: 0.3
+  _pad: 2
+  _turn: 0.5
+  _bounceWeighting: 0.5
+  _avoidObstacleWeighting: 0
+  _maxWiggle: 1
+  _wiggleFrame: 10
+  _wiggleRadius: 10
+  _steeringSpeed: 1000
+  _totalSpeedWeighting: 1
 --- !u!4 &1532832489
 Transform:
   m_ObjectHideFlags: 0
@@ -664,36 +642,32 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e82ea8e5a79564949b7544296ffaf8fb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  optionsMenu: {fileID: 1359900273}
-  flockSettings: {fileID: 2144781692}
-  avoidSettings: {fileID: 1467543041}
-  alignSettings: {fileID: 1385038191}
-  menuScreenBool: 0
-  numBoidsSlider: {fileID: 152391759}
-  flockToggle: {fileID: 1682771254}
-  avoidToggle: {fileID: 395690757}
-  alignToggle: {fileID: 2114860727}
-  flockRadiusSlider: {fileID: 627233436}
-  flockIntensitySlider: {fileID: 761647610}
-  avoidRadiusSlider: {fileID: 304970950}
-  avoidIntensitySlider: {fileID: 229971924}
-  alignRadiusSlider: {fileID: 751537885}
-  alignIntensitySlider: {fileID: 2015785609}
-  avoidTeamsRadiusSlider: {fileID: 1405787764}
-  avoidTeamsIntensitySlider: {fileID: 565986422}
-  avoidObstaclesIntensitySlider: {fileID: 62041708}
-  resetButton: {fileID: 1529042234}
-  ingameQuitButton: {fileID: 238715279}
-  tabToggle: {fileID: 650777722}
-  menuScreen: {fileID: 1697973800}
-  oneToggle: {fileID: 1755635398}
-  twoToggle: {fileID: 836961109}
-  threeToggle: {fileID: 735851011}
-  numberofBoidsSlider: {fileID: 1881627810}
-  numberofBoidsText: {fileID: 1046803521}
-  invalidText: {fileID: 2002935362}
-  startButton: {fileID: 1509038142}
-  menuQuitButton: {fileID: 270564403}
+  OptionsMenu: {fileID: 1359900273}
+  MenuScreenBool: 0
+  FlockToggle: {fileID: 1682771254}
+  AvoidToggle: {fileID: 395690757}
+  AlignToggle: {fileID: 2114860727}
+  FlockRadiusSlider: {fileID: 627233436}
+  FlockIntensitySlider: {fileID: 761647610}
+  AvoidRadiusSlider: {fileID: 304970950}
+  AvoidIntensitySlider: {fileID: 229971924}
+  AlignRadiusSlider: {fileID: 751537885}
+  AlignIntensitySlider: {fileID: 2015785609}
+  AvoidTeamsRadiusSlider: {fileID: 1405787764}
+  AvoidTeamsIntensitySlider: {fileID: 565986422}
+  AvoidObstaclesIntensitySlider: {fileID: 62041708}
+  ResetButton: {fileID: 1529042234}
+  IngameQuitButton: {fileID: 238715279}
+  TabToggle: {fileID: 650777722}
+  MenuScreen: {fileID: 1697973800}
+  OneToggle: {fileID: 1755635398}
+  TwoToggle: {fileID: 836961109}
+  ThreeToggle: {fileID: 735851011}
+  NumberOfBoidsSlider: {fileID: 1881627810}
+  NumberofBoidsText: {fileID: 1046803521}
+  InvalidText: {fileID: 2002935362}
+  StartButton: {fileID: 1509038142}
+  MenuQuitButton: {fileID: 270564403}
 --- !u!1 &1636479533
 GameObject:
   m_ObjectHideFlags: 0
@@ -995,11 +969,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9085046f02f69544eb97fd06b6048fe2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!1 &2144781692 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 4990431368571121142, guid: c8ed485ed5b8a41de9f58a43f28756a7, type: 3}
-  m_PrefabInstance: {fileID: 4990431369389877386}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &4990431369389877386
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1007,14 +976,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 1358037692463537190, guid: c8ed485ed5b8a41de9f58a43f28756a7, type: 3}
-      propertyPath: m_AnchoredPosition.x
-      value: 60
-      objectReference: {fileID: 0}
-    - target: {fileID: 1358037692463537190, guid: c8ed485ed5b8a41de9f58a43f28756a7, type: 3}
-      propertyPath: m_AnchoredPosition.y
-      value: -40
-      objectReference: {fileID: 0}
     - target: {fileID: 1999595246659277600, guid: c8ed485ed5b8a41de9f58a43f28756a7, type: 3}
       propertyPath: m_AnchorMax.x
       value: 0
@@ -1102,17 +1063,6 @@ PrefabInstance:
     - target: {fileID: 4990431368078894827, guid: c8ed485ed5b8a41de9f58a43f28756a7, type: 3}
       propertyPath: m_AnchorMin.x
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4990431368321323536, guid: c8ed485ed5b8a41de9f58a43f28756a7, type: 3}
-      propertyPath: m_SizeDelta.y
-      value: 91.3687
-      objectReference: {fileID: 0}
-    - target: {fileID: 4990431368321323537, guid: c8ed485ed5b8a41de9f58a43f28756a7, type: 3}
-      propertyPath: m_Text
-      value: 'Press [tab] to toggle Options Menu on/off
-
-        Right click anywhere
-        on screen to add an obstacle'
       objectReference: {fileID: 0}
     - target: {fileID: 4990431368357082508, guid: c8ed485ed5b8a41de9f58a43f28756a7, type: 3}
       propertyPath: m_AnchorMax.x
@@ -1312,10 +1262,6 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6530309309808494162, guid: c8ed485ed5b8a41de9f58a43f28756a7, type: 3}
       propertyPath: m_AnchorMin.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8757083556355592568, guid: c8ed485ed5b8a41de9f58a43f28756a7, type: 3}
-      propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
