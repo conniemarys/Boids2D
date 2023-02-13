@@ -1180,6 +1180,110 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 4990431369136170567, guid: c8ed485ed5b8a41de9f58a43f28756a7, type: 3}
+      propertyPath: OneToggle
+      value: 
+      objectReference: {fileID: 1755635398}
+    - target: {fileID: 4990431369136170567, guid: c8ed485ed5b8a41de9f58a43f28756a7, type: 3}
+      propertyPath: TabToggle
+      value: 
+      objectReference: {fileID: 650777722}
+    - target: {fileID: 4990431369136170567, guid: c8ed485ed5b8a41de9f58a43f28756a7, type: 3}
+      propertyPath: TwoToggle
+      value: 
+      objectReference: {fileID: 836961109}
+    - target: {fileID: 4990431369136170567, guid: c8ed485ed5b8a41de9f58a43f28756a7, type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4990431369136170567, guid: c8ed485ed5b8a41de9f58a43f28756a7, type: 3}
+      propertyPath: MenuScreen
+      value: 
+      objectReference: {fileID: 1697973800}
+    - target: {fileID: 4990431369136170567, guid: c8ed485ed5b8a41de9f58a43f28756a7, type: 3}
+      propertyPath: AlignToggle
+      value: 
+      objectReference: {fileID: 2114860727}
+    - target: {fileID: 4990431369136170567, guid: c8ed485ed5b8a41de9f58a43f28756a7, type: 3}
+      propertyPath: AvoidToggle
+      value: 
+      objectReference: {fileID: 395690757}
+    - target: {fileID: 4990431369136170567, guid: c8ed485ed5b8a41de9f58a43f28756a7, type: 3}
+      propertyPath: FlockToggle
+      value: 
+      objectReference: {fileID: 1682771254}
+    - target: {fileID: 4990431369136170567, guid: c8ed485ed5b8a41de9f58a43f28756a7, type: 3}
+      propertyPath: InvalidText
+      value: 
+      objectReference: {fileID: 2002935362}
+    - target: {fileID: 4990431369136170567, guid: c8ed485ed5b8a41de9f58a43f28756a7, type: 3}
+      propertyPath: OptionsMenu
+      value: 
+      objectReference: {fileID: 1359900273}
+    - target: {fileID: 4990431369136170567, guid: c8ed485ed5b8a41de9f58a43f28756a7, type: 3}
+      propertyPath: ResetButton
+      value: 
+      objectReference: {fileID: 1529042234}
+    - target: {fileID: 4990431369136170567, guid: c8ed485ed5b8a41de9f58a43f28756a7, type: 3}
+      propertyPath: StartButton
+      value: 
+      objectReference: {fileID: 1509038142}
+    - target: {fileID: 4990431369136170567, guid: c8ed485ed5b8a41de9f58a43f28756a7, type: 3}
+      propertyPath: ThreeToggle
+      value: 
+      objectReference: {fileID: 735851011}
+    - target: {fileID: 4990431369136170567, guid: c8ed485ed5b8a41de9f58a43f28756a7, type: 3}
+      propertyPath: MenuQuitButton
+      value: 
+      objectReference: {fileID: 270564403}
+    - target: {fileID: 4990431369136170567, guid: c8ed485ed5b8a41de9f58a43f28756a7, type: 3}
+      propertyPath: IngameQuitButton
+      value: 
+      objectReference: {fileID: 238715279}
+    - target: {fileID: 4990431369136170567, guid: c8ed485ed5b8a41de9f58a43f28756a7, type: 3}
+      propertyPath: AlignRadiusSlider
+      value: 
+      objectReference: {fileID: 751537885}
+    - target: {fileID: 4990431369136170567, guid: c8ed485ed5b8a41de9f58a43f28756a7, type: 3}
+      propertyPath: AvoidRadiusSlider
+      value: 
+      objectReference: {fileID: 304970950}
+    - target: {fileID: 4990431369136170567, guid: c8ed485ed5b8a41de9f58a43f28756a7, type: 3}
+      propertyPath: FlockRadiusSlider
+      value: 
+      objectReference: {fileID: 627233436}
+    - target: {fileID: 4990431369136170567, guid: c8ed485ed5b8a41de9f58a43f28756a7, type: 3}
+      propertyPath: NumberofBoidsText
+      value: 
+      objectReference: {fileID: 1046803521}
+    - target: {fileID: 4990431369136170567, guid: c8ed485ed5b8a41de9f58a43f28756a7, type: 3}
+      propertyPath: NumberOfBoidsSlider
+      value: 
+      objectReference: {fileID: 1881627810}
+    - target: {fileID: 4990431369136170567, guid: c8ed485ed5b8a41de9f58a43f28756a7, type: 3}
+      propertyPath: AlignIntensitySlider
+      value: 
+      objectReference: {fileID: 2015785609}
+    - target: {fileID: 4990431369136170567, guid: c8ed485ed5b8a41de9f58a43f28756a7, type: 3}
+      propertyPath: AvoidIntensitySlider
+      value: 
+      objectReference: {fileID: 229971924}
+    - target: {fileID: 4990431369136170567, guid: c8ed485ed5b8a41de9f58a43f28756a7, type: 3}
+      propertyPath: FlockIntensitySlider
+      value: 
+      objectReference: {fileID: 761647610}
+    - target: {fileID: 4990431369136170567, guid: c8ed485ed5b8a41de9f58a43f28756a7, type: 3}
+      propertyPath: AvoidTeamsRadiusSlider
+      value: 
+      objectReference: {fileID: 1405787764}
+    - target: {fileID: 4990431369136170567, guid: c8ed485ed5b8a41de9f58a43f28756a7, type: 3}
+      propertyPath: AvoidTeamsIntensitySlider
+      value: 
+      objectReference: {fileID: 565986422}
+    - target: {fileID: 4990431369136170567, guid: c8ed485ed5b8a41de9f58a43f28756a7, type: 3}
+      propertyPath: AvoidObstaclesIntensitySlider
+      value: 
+      objectReference: {fileID: 62041708}
     - target: {fileID: 4990431369189760723, guid: c8ed485ed5b8a41de9f58a43f28756a7, type: 3}
       propertyPath: m_AnchorMax.x
       value: 0
